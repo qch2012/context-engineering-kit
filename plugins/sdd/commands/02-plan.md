@@ -49,6 +49,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - For each dependency → best practices task
    - For each integration → patterns task
 2. **Generate and dispatch research agents**:
+   In case if you have access to context7 MCP, ask them to use it, in order to investigate libraries and frameworks documentation, instead of using web search.
 
    ```text
    For each unknown in Technical Context:
@@ -68,6 +69,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Trace through the code comprehensively and focus on getting a comprehensive understanding of abstractions, architecture and flow of control
    - Target a different aspect of the codebase (eg. similar features, high level understanding, architectural understanding, user experience, etc)
    - Include a list of 5-10 key files to read
+   - If you have access to serena MCP, ask them to use it, in order to investigate codebase, instead of using read command.
 
    **Example agent prompts**:
    - "Find features similar to [feature] and trace through their implementation comprehensively"

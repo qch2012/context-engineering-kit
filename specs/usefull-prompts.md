@@ -73,8 +73,15 @@ Use when facing 3+ independent failures that can be investigated without shared 
 
 ## code-review
 
-[link](https://github.com/anthropics/claude-code/blob/main/plugins/code-review/commands/code-review.md)
+[x][link](https://github.com/anthropics/claude-code/blob/main/plugins/code-review/commands/code-review.md)
+[link](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/commands/review-pr.md)
 [code reviewer agent](https://github.com/obra/superpowers/blob/main/agents/code-reviewer.md)
+[code-reviewer agent](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/code-reviewer.md)
+[code-simplifier agent](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/code-simplifier.md)
+[comment-analyzer agent](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/comment-analyzer.md)
+[pr-test-analyzer agent](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/pr-test-analyzer.md)
+[silent-failure-hunter agent](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/silent-failure-hunter.md)
+[type-design-analyzer agent](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/type-design-analyzer.md)
 
 Performs automated code review on a pull request using multiple specialized agents.
 
