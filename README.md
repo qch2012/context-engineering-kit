@@ -70,7 +70,7 @@ To view all available plugins:
 - [Customaize Agent](#customaize-agent) - Commands and skills for writing and refining commands, hooks, skills for Claude Code, includes Anthropic Best Practices and [Agent Persuasion Principles](https://arxiv.org/abs/2508.00614) that can be usefull for sub-agent workflows.
 - [Docs](#docs) - Commands for analaysing project, writing and refining documentation.
 - [Tech Stack](#tech-stack) - Commands for setup or update of CLAUDE.md file with best practices for specific language or framework.
-- [MCP](#mcp) - Commands for setup MCP server if needed and update CLAUDE.md file with requirement to use this MCP server for current project.
+- [MCP](#mcp) - Commands for setup well known MCP server integration if needed and update CLAUDE.md file with requirement to use this MCP server for current project.
 
 ### Reflexion
 
