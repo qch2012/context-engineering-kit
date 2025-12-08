@@ -32,27 +32,19 @@ Browse our specialized plugins organized by area of focus:
 
 ### Quality & Refinement
 
-* [Reflexion](plugins/reflexion/) - Self-refinement loops (8-21% quality improvement)
-* [Code Review](plugins/code-review/) - Multi-agent code review system
-* [Kaizen](plugins/kaizen/) - Continuous improvement methodology
+<table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td>Reflexion</td><td>Self-refinement loops</td><td><a href="plugins/reflexion/">reflexion</a></td></tr><tr><td>Code Review</td><td>Multi-agent code review system</td><td><a href="plugins/code-review/">code-review</a></td></tr><tr><td>Kaizen</td><td>Continuous improvement methodology</td><td><a href="plugins/kaizen/">kaizen</a></td></tr></tbody></table>
 
 ### Development Workflows
 
-* [Spec-Driven Development](plugins/sdd/) - Feature specification to implementation
-* [Test-Driven Development](plugins/tdd/) - TDD methodology and anti-patterns
-* [Subagent-Driven Development](plugins/sadd/) - Task isolation with quality gates
-* [Domain-Driven Development](plugins/ddd/) - Clean Architecture and SOLID principles
+<table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td>Spec-Driven Development</td><td>Feature specification to implementation</td><td><a href="plugins/sdd/">sdd</a></td></tr><tr><td>Test-Driven Development</td><td>TDD methodology and anti-patterns</td><td><a href="plugins/tdd/">tdd</a></td></tr><tr><td>Subagent-Driven Development</td><td>Task isolation with quality gates</td><td><a href="plugins/sadd/">sadd</a></td></tr><tr><td>Domain-Driven Development</td><td>Clean Architecture and SOLID principles</td><td><a href="plugins/ddd/">ddd</a></td></tr></tbody></table>
 
 ### Developer Tools
 
-* [Git](plugins/git/) - Commit creation and PR management
-* [Docs](plugins/docs/) - Documentation generation and updates
-* [Tech Stack](plugins/tech-stack/) - Language and framework best practices
+<table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td>Git</td><td>Commit creation and PR management</td><td><a href="plugins/git/">git</a></td></tr><tr><td>Docs</td><td>Documentation generation and updates</td><td><a href="plugins/docs/">docs</a></td></tr><tr><td>Tech Stack</td><td>Language and framework best practices</td><td><a href="plugins/tech-stack/">tech-stack</a></td></tr></tbody></table>
 
-### Agents Implevements and Extensions
+### Agents Improvements and Extensions
 
-* [Customaize Agent](plugins/customaize-agent/) - Build your own commands and skills
-* [MCP](plugins/mcp/) - Model Context Protocol server integration
+<table data-view="cards"><thead><tr><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td>Customize Agent</td><td>Build your own commands and skills</td><td><a href="plugins/customaize-agent/">customaize-agent</a></td></tr><tr><td>MCP</td><td>Model Context Protocol server integration</td><td><a href="plugins/mcp/">mcp</a></td></tr></tbody></table>
 
 ## Contributing
 
