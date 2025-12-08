@@ -1,22 +1,25 @@
-# Plugins Documentation
+---
+icon: grid-4
+---
+
+# Plugins
 
 This directory contains comprehensive documentation for all 12 plugins in the Context Engineering Kit. Each plugin is designed to enhance Claude Code with specific capabilities focused on code quality, development workflows, and continuous improvement.
 
 ## Quick Navigation
 
-- [Reflexion](./reflexion/README.md) - Self-refinement and iterative improvement
-- [Code Review](./code-review/README.md) - Multi-agent code quality analysis
-- [Git](./git/README.md) - Streamlined Git operations
-- [Test-Driven Development](./tdd/README.md) - TDD methodology and best practices
-- [Subagent-Driven Development](./sadd/README.md) - Task delegation with quality gates
-- [Domain-Driven Development](./ddd/README.md) - Code quality and architecture patterns
-- [Spec-Driven Development](./sdd/README.md) - Spec-Driven workflow
-- [Kaizen](./kaizen/README.md) - Continuous improvement and root cause analysis
-- [Customaize Agent](./customaize-agent/README.md) - Create and refine Claude Code extensions
-- [Docs](./docs/README.md) - Documentation management
-- [Tech Stack](./tech-stack/README.md) - Language and framework best practices
-- [MCP](./mcp/README.md) - Model Context Protocol integration
-
+* [Reflexion](reflexion/) - Self-refinement and iterative improvement
+* [Code Review](code-review/) - Multi-agent code quality analysis
+* [Git](git/) - Streamlined Git operations
+* [Test-Driven Development](tdd/) - TDD methodology and best practices
+* [Subagent-Driven Development](sadd/) - Task delegation with quality gates
+* [Domain-Driven Development](ddd/) - Code quality and architecture patterns
+* [Spec-Driven Development](sdd/) - Spec-Driven workflow
+* [Kaizen](kaizen/) - Continuous improvement and root cause analysis
+* [Customaize Agent](customaize-agent/) - Create and refine Claude Code extensions
+* [Docs](docs/) - Documentation management
+* [Tech Stack](tech-stack/) - Language and framework best practices
+* [MCP](mcp/) - Model Context Protocol integration
 
 ## Installation
 
@@ -41,26 +44,28 @@ See individual plugin documentation for specific installation commands and verif
 Self-refinement framework that introduces feedback and refinement loops to improve output quality.
 
 **Key Features:**
-- Reflect on previous responses
-- Multi-perspective critique with debate
-- Memory updates with insights
+
+* Reflect on previous responses
+* Multi-perspective critique with debate
+* Memory updates with insights
 
 **When to use:** After completing any task to verify quality and identify improvements.
 
-[Full Documentation](./reflexion/README.md) 
+[Full Documentation](reflexion/)
 
 #### Code Review
 
 Comprehensive code review using multiple specialized agents for thorough quality evaluation.
 
 **Key Features:**
-- Multi-agent review (bug hunter, security auditor, test coverage reviewer, etc.)
-- Local changes review
-- Pull request review
+
+* Multi-agent review (bug hunter, security auditor, test coverage reviewer, etc.)
+* Local changes review
+* Pull request review
 
 **When to use:** Before committing changes or creating pull requests.
 
-[Full Documentation](./code-review/README.md) 
+[Full Documentation](code-review/)
 
 ### Development Workflows
 
@@ -69,39 +74,42 @@ Comprehensive code review using multiple specialized agents for thorough quality
 TDD methodology with anti-pattern detection and testing best practices.
 
 **Key Features:**
-- TDD workflow guidance
-- Common anti-patterns awareness
-- Testing subagent skills
+
+* TDD workflow guidance
+* Common anti-patterns awareness
+* Testing subagent skills
 
 **When to use:** When implementing new features with test-first approach.
 
-[Full Documentation](./tdd/README.md) 
+[Full Documentation](tdd/)
 
 #### Subagent-Driven Development
 
 Task delegation pattern that dispatches fresh subagents with quality gates between tasks.
 
 **Key Features:**
-- Fresh context for each task
-- Code review between tasks
-- Fast iteration with quality control
+
+* Fresh context for each task
+* Code review between tasks
+* Fast iteration with quality control
 
 **When to use:** For complex features requiring multiple independent tasks.
 
-[Full Documentation](./sadd/README.md) 
+[Full Documentation](sadd/)
 
 #### Spec-Driven Development
 
 Comprehensive Spec-Driven Development workflow using specialized agents for each phase.
 
 **Key Features:**
-- Complete workflow: setup → specify → plan → tasks → implement → document
-- Multiple specialized agents (architect, explorer, reviewer, etc.)
-- Constitution-based development
+
+* Complete workflow: setup → specify → plan → tasks → implement → document
+* Multiple specialized agents (architect, explorer, reviewer, etc.)
+* Constitution-based development
 
 **When to use:** For complex features requiring detailed specifications and planning.
 
-[Full Documentation](./sdd/README.md) 
+[Full Documentation](sdd/)
 
 ### Code Quality & Architecture
 
@@ -110,13 +118,14 @@ Comprehensive Spec-Driven Development workflow using specialized agents for each
 Code quality and architecture patterns including Clean Architecture and SOLID principles.
 
 **Key Features:**
-- Code formatting setup
-- Architecture patterns
-- Design principles
+
+* Code formatting setup
+* Architecture patterns
+* Design principles
 
 **When to use:** Setting up new projects or enforcing code quality standards.
 
-[Full Documentation](./ddd/README.md) 
+[Full Documentation](ddd/)
 
 ### Process & Analysis
 
@@ -125,27 +134,29 @@ Code quality and architecture patterns including Clean Architecture and SOLID pr
 Streamlined Git operations with conventional commits and pull request management.
 
 **Key Features:**
-- Conventional commits with emoji
-- Pull request creation
-- Issue analysis and loading
+
+* Conventional commits with emoji
+* Pull request creation
+* Issue analysis and loading
 
 **When to use:** For all Git operations to maintain commit and PR quality.
 
-[Full Documentation](./git/README.md) 
+[Full Documentation](git/)
 
 #### Kaizen
 
 Continuous improvement methodology with multiple root cause analysis techniques.
 
 **Key Features:**
-- Auto-selected analysis methods
-- Five Whys analysis
-- A3 problem solving
-- PDCA cycle
+
+* Auto-selected analysis methods
+* Five Whys analysis
+* A3 problem solving
+* PDCA cycle
 
 **When to use:** Investigating issues, bugs, or process improvements.
 
-[Full Documentation](./kaizen/README.md) 
+[Full Documentation](kaizen/)
 
 ### Customization & Setup
 
@@ -154,49 +165,52 @@ Continuous improvement methodology with multiple root cause analysis techniques.
 Tools for creating and refining Claude Code commands, skills, and hooks.
 
 **Key Features:**
-- Command creation assistant
-- Skill development guide
-- Prompt testing framework
-- Anthropic best practices
+
+* Command creation assistant
+* Skill development guide
+* Prompt testing framework
+* Anthropic best practices
 
 **When to use:** Creating custom plugins or extending Claude Code.
 
-[Full Documentation](./customaize-agent/README.md) 
+[Full Documentation](customaize-agent/)
 
 #### Docs
 
 Project analysis and documentation management commands.
 
 **Key Features:**
-- Documentation updates
-- Implementation tracking
+
+* Documentation updates
+* Implementation tracking
 
 **When to use:** After completing development phases to update documentation.
 
-[Full Documentation](./docs/README.md) 
+[Full Documentation](docs/)
 
 #### Tech Stack
 
 Language and framework-specific best practices setup.
 
 **Key Features:**
-- TypeScript best practices
-- Framework-specific guidelines
+
+* TypeScript best practices
+* Framework-specific guidelines
 
 **When to use:** Setting up new projects or enforcing language-specific standards.
 
-[Full Documentation](./tech-stack/README.md) 
+[Full Documentation](tech-stack/)
 
 #### MCP
 
 Model Context Protocol server integration and setup.
 
 **Key Features:**
-- Context7 MCP setup
-- Serena MCP setup
-- MCP server development guide
+
+* Context7 MCP setup
+* Serena MCP setup
+* MCP server development guide
 
 **When to use:** Integrating external services with Claude Code.
 
-[Full Documentation](./mcp/README.md) 
-
+[Full Documentation](mcp/)
