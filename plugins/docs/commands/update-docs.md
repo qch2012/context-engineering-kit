@@ -52,7 +52,7 @@ Ensure all code changes are properly documented with clear, maintainable documen
    - If available, read the SADD skill to understand best practices for managing agents
 
 2. **Discover documentation infrastructure**
-   - Read @README.md and project config (package.json, pyproject.toml, etc.)
+   - CRITICAL: You MUST read root README.md and project config (package.json, pyproject.toml, etc.)
    - Identify existing documentation structure (docs/, README files, JSDoc)
    - Understand project conventions and documentation patterns
    - Check for documentation generation tools (OpenAPI, JSDoc, TypeDoc)
@@ -105,7 +105,7 @@ Do steps 4-5 in parallel using haiku agents:
      - **JSDoc/Code Comments**: Complex logic changes → per-file agents
      - **Index Documents**: Updates to navigation and discovery docs → single agent
    - Identify index documents requiring updates:
-     - Root `README.md` - if new modules/features affect project overview
+     - Root `README.md` - if new modules/features affect project overview, High probability of needing update.
      - Module `README.md` - if module's purpose, exports, or usage changed
      - `docs/` index files - if documentation structure changed
    - Create documentation task assignments
