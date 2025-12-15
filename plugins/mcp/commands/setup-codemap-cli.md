@@ -57,11 +57,7 @@ Once Codemap is successfully installed, update CLAUDE.md file with the following
 
 Codemap CLI is available for intelligent codebase visualization and navigation.
 
-### Required Usage
-
-IMPORTANT: Agent MUST run `codemap hook session-start` after forst user input, before any other commands or actions!
-
-- **Working State**: Agent MUST use `codemap --diff --ref master` to research changes different from default branch, and `git diff` + `git status` to research current working state.
+**Required Usage** - You MUST use `codemap --diff --ref master` to research changes different from default branch, and `git diff` + `git status` to research current working state.
 
 ### Quick Start
 
@@ -102,22 +98,11 @@ codemap --diff
 codemap --diff --ref develop
 ```
 
-### Available Hooks
-
-| Command | Trigger | Description |
-|---------|---------|-------------|
-| `codemap hook session-start` | SessionStart | Full tree, hubs, branch diff, last session context |
-| `codemap hook pre-edit` | PreToolUse (Edit\|Write) | Who imports file + what hubs it imports |
-| `codemap hook post-edit` | PostToolUse (Edit\|Write) | Impact of changes (same as pre-edit) |
-| `codemap hook prompt-submit` | UserPromptSubmit | Hub context for mentioned files + session progress |
-| `codemap hook pre-compact` | PreCompact | Saves hub state to .codemap/hubs.txt |
-| `codemap hook session-stop` | SessionEnd | Edit timeline with line counts and stats |
-
 ```
 
 if the default branch is not `main`, but instead `master` (or something else) update content accordingly:
  - use `codemap --diff --ref master` instead of regular `codemap --diff`
- - use `codemap hook session-start --ref=master` instead of regular `codemap hook session-start`
+
 
 ## 6. Update .gitignore file
 
@@ -136,3 +121,103 @@ codemap .
 codemap --diff
 ```
 
+## 8. Add hooks to ./.claude/settings.json
+
+1. Create `./.claude/settings.json` file if it not exists and add following content:
+
+    ```json
+    {
+    "hooks": {
+        "session-start": "codemap hook session-start && echo 'git diff:' && git diff --stat && echo 'git status:' && git status"
+    }
+    }
+    ```
+
+    if default branch is not `main`, but instead `master` (or something else) update content accordingly:
+    - use `codemap hook session-start --ref=master` instead of regular `codemap hook session-start`
+    - For rest of commands also add `--ref=master` flag.
+
+2. Ask user whether he want to add any other hooks and provide list of options with descriptions. Add hooks that he asks for.
+
+### Available Hooks
+
+| Command | Trigger | Description |
+|---------|---------|-------------|
+| `codemap hook session-start` | SessionStart | Full tree, hubs, branch diff, last session context |
+| `codemap hook pre-edit` | PreToolUse (Edit\|Write) | Who imports file + what hubs it imports |
+| `codemap hook post-edit` | PostToolUse (Edit\|Write) | Impact of changes (same as pre-edit) |
+| `codemap hook prompt-submit` | UserPromptSubmit | Hub context for mentioned files + session progress |
+| `codemap hook pre-compact` | PreCompact | Saves hub state to .codemap/hubs.txt |
+| `codemap hook session-stop` | SessionEnd | Edit timeline with line counts and stats |
+
+
+### Example of file with full hooks configuration
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codemap hook session-start"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codemap hook pre-edit"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codemap hook post-edit"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codemap hook prompt-submit"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codemap hook pre-compact"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codemap hook session-stop"
+          }
+        ]
+      }
+    ]
+  }
+}
+```

@@ -4,6 +4,7 @@
 * [Getting Started](getting-started.md)
 * [Guides](guides/README.md)
   * [Project Setup](guides/project-setup.md)
+  * [File Structure Context](guides/file-structure-context.md)
   * [Feature Development](guides/feature-development.md)
   * [Spec-Driven Development](guides/spec-driven-development.md)
   * [PR Review](guides/pr-review.md)

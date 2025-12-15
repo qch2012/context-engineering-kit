@@ -59,11 +59,7 @@ make set-marketplace-version VERSION=x.y.z     # Update marketplace version
 
 Codemap CLI is available for intelligent codebase visualization and navigation.
 
-### Required Usage
-
-IMPORTANT: Agent MUST run `codemap hook session-start` after forst user input, before any other commands or actions!
-
-- **Working State**: Agent MUST use `codemap --diff --ref master` to research changes different from default branch, and `git diff` + `git status` to research current working state.
+**Required Usage** - You MUST use `codemap --diff --ref master` to research changes different from default branch, and `git diff` + `git status` to research current working state.
 
 ### Quick Start
 
@@ -103,17 +99,6 @@ See what you're working on:
 codemap --diff --ref master
 codemap --diff --ref develop
 ```
-
-### Available Hooks
-
-| Command | Trigger | Description |
-|---------|---------|-------------|
-| `codemap hook session-start` | SessionStart | Full tree, hubs, branch diff, last session context |
-| `codemap hook pre-edit` | PreToolUse (Edit\|Write) | Who imports file + what hubs it imports |
-| `codemap hook post-edit` | PostToolUse (Edit\|Write) | Impact of changes (same as pre-edit) |
-| `codemap hook prompt-submit` | UserPromptSubmit | Hub context for mentioned files + session progress |
-| `codemap hook pre-compact` | PreCompact | Saves hub state to .codemap/hubs.txt |
-| `codemap hook session-stop` | SessionEnd | Edit timeline with line counts and stats |
 
 ## Use Paper Search MCP for Academic Research
 

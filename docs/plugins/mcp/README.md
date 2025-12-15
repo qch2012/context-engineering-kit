@@ -249,11 +249,7 @@ After setup, your CLAUDE.md will include:
 
 Codemap CLI is available for intelligent codebase visualization and navigation.
 
-### Required Usage
-
-IMPORTANT: Agent MUST run `codemap hook session-start` after first user input.
-
-- **Working State**: Use `codemap --diff --ref master` to research changes.
+**Required Usage** - You MUST use `codemap --diff --ref master` to research changes different from default branch, and `git diff` + `git status` to research current working state.
 
 ### Quick Start
 
@@ -261,15 +257,9 @@ codemap .                    # Project tree
 codemap --only md .          # Just Markdown files
 codemap --diff --ref master  # What changed vs master
 codemap --deps .             # Dependency flow
-
-### Available Hooks
-
-| Command | Description |
-|---------|-------------|
-| `codemap hook session-start` | Full tree, hubs, branch diff |
-| `codemap hook pre-edit` | Who imports file being edited |
-| `codemap hook post-edit` | Impact of changes |
 ```
+
+The command also configures Claude Code hooks in `.claude/settings.json` for automatic session context.
 
 #### Best Practices
 
