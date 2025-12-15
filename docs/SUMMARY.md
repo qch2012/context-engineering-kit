@@ -10,6 +10,7 @@
   * [Brainstorming Complex Feature](guides/brainstorming-to-implementation.md)
   * [Bug Investigation and Fix](guides/bug-investigation.md)
   * [Code Quality Improvement](guides/code-quality-improvement.md)
+  * [CI/CD Integration](guides/ci-integration.md)
   * [Creating Custom Extensions](guides/custom-extensions.md)
 * [Plugins](plugins/README.md)
   * [Code Review](plugins/code-review/README.md)
