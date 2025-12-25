@@ -59,8 +59,8 @@ Each installed plugin loads only its specific agents, commands, and skills into 
 # If they are minor, it will suggest improvements that you can respond to
 > fix the issues
 
-# If you would like it to avoid issues that were found during reflection, 
-# you can save the insights to project memory
+# If you would like it to avoid issues that were found during reflection to appear again, 
+# ask claude to extract resolution strategies and save the insights to project memory
 > /reflexion:memorize
 ```
 
