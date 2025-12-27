@@ -122,6 +122,106 @@ argument-hint: Path to OpenAPI spec file
 - One blank line after the closing `---` before content begins
 </command_frontmatter>
 
+<command_features>
+
+## Slash Command Features
+
+### Namespacing
+
+Use subdirectories to group related commands. Subdirectories appear in the command description but don't affect the command name.
+
+**Example:**
+- `.claude/commands/frontend/component.md` creates `/component` with description "(project:frontend)"
+- `~/.claude/commands/component.md` creates `/component` with description "(user)"
+
+**Priority:** If a project command and user command share the same name, the project command takes precedence.
+
+### Arguments
+
+#### All Arguments with `$ARGUMENTS`
+
+Captures all arguments passed to the command:
+
+```bash
+# Command definition
+echo 'Fix issue #$ARGUMENTS following our coding standards' > .claude/commands/fix-issue.md
+
+# Usage
+> /fix-issue 123 high-priority
+# $ARGUMENTS becomes: "123 high-priority"
+```
+
+#### Individual Arguments with `$1`, `$2`, etc.
+
+Access specific arguments individually using positional parameters:
+
+```bash
+# Command definition
+echo 'Review PR #$1 with priority $2 and assign to $3' > .claude/commands/review-pr.md
+
+# Usage
+> /review-pr 456 high alice
+# $1 becomes "456", $2 becomes "high", $3 becomes "alice"
+```
+
+### Bash Command Execution
+
+Execute bash commands before the slash command runs using the `!` prefix. The output is included in the command context.
+
+**Note:** You must include `allowed-tools` with the `Bash` tool.
+
+```markdown
+---
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+description: Create a git commit
+---
+
+## Context
+
+- Current git status: !`git status`
+- Current git diff: !`git diff HEAD`
+- Current branch: !`git branch --show-current`
+- Recent commits: !`git log --oneline -10`
+```
+
+### File References
+
+Include file contents using the `@` prefix to reference files:
+
+```markdown
+Review the implementation in @src/utils/helpers.js
+Compare @src/old-version.js with @src/new-version.js
+```
+
+### Thinking Mode
+
+Slash commands can trigger extended thinking by including extended thinking keywords.
+
+### Frontmatter Options
+
+| Frontmatter | Purpose | Default |
+|-------------|---------|---------|
+| `allowed-tools` | List of tools the command can use | Inherits from conversation |
+| `argument-hint` | Expected arguments for auto-completion | None |
+| `description` | Brief description of the command | First line from prompt |
+| `model` | Specific model string | Inherits from conversation |
+| `disable-model-invocation` | Prevent `SlashCommand` tool from calling this command | false |
+
+**Example with all frontmatter options:**
+
+```markdown
+---
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+argument-hint: [message]
+description: Create a git commit
+model: claude-3-5-haiku-20241022
+---
+
+Create a git commit with message: $ARGUMENTS
+```
+
+</command_features>
+
 <pattern_research>
 
 ## Before Creating: Study Similar Commands
