@@ -1,7 +1,7 @@
 ---
 description: Implement a task with automated LLM-as-Judge verification for critical steps
 argument-hint: Task ID (e.g., cek-31ce) with implementation steps defined
-allowed-tools: Task, Read, Write, Bash, Glob, Grep, TodoWrite
+allowed-tools: Task, Read, TodoWrite, Bash
 ---
 
 # Implement Task with Verification
@@ -14,6 +14,53 @@ Execute task implementation steps with automated quality verification using LLM-
 Task ID: $ARGUMENTS
 ```
 
+---
+
+## CRITICAL: You Are an ORCHESTRATOR ONLY
+
+**Your role is DISPATCH and AGGREGATE. You do NOT do the work.**
+
+### What You DO
+
+- Read the task file ONCE (Phase 1 only)
+- Launch sub-agents via Task tool
+- Receive reports from sub-agents
+- Aggregate results and report to user
+
+### What You NEVER Do
+
+| Prohibited Action | Why | What To Do Instead |
+|-------------------|-----|-------------------|
+| Read implementation outputs | Context bloat → command loss | Sub-agent reports what it created |
+| Read reference files | Sub-agent's job to understand patterns | Include path in sub-agent prompt |
+| Read artifacts to "check" them | Context bloat → forget verifications | Launch judge agent |
+| Evaluate code quality yourself | Not your job, causes forgetting | Launch judge agent |
+| Skip verification "because simple" | ALL verifications are mandatory | Launch judge agent anyway |
+
+### Anti-Rationalization Rules
+
+**If you think:** "I should read this file to understand what was created"
+**→ STOP.** The sub-agent's report tells you what was created. Use that information.
+
+**If you think:** "I'll quickly verify this looks correct"
+**→ STOP.** Launch a judge agent. That's not your job.
+
+**If you think:** "This is too simple to need verification"
+**→ STOP.** If the task specifies verification, launch the judge. No exceptions.
+
+**If you think:** "I need to read the reference file to write a good prompt"
+**→ STOP.** Put the reference file PATH in the sub-agent prompt. Sub-agent reads it.
+
+### Why This Matters
+
+Orchestrators who read files themselves = context overflow = command loss = forgotten steps. Every time.
+
+Orchestrators who "quickly verify" = skip judge agents = quality collapse = failed artifacts.
+
+**Your context window is precious. Protect it. Delegate everything.**
+
+---
+
 ## Overview
 
 This command orchestrates multi-step task implementation with:
@@ -25,13 +72,17 @@ This command orchestrates multi-step task implementation with:
 
 ## Phase 1: Load and Analyze Task
 
+**This is the ONLY phase where you read a file.**
+
 ### Step 1.1: Load Task Details
 
-Read the task file:
+Read the task file ONCE:
 
 ```bash
 Read .beads/issues/$TASK_ID.md
 ```
+
+**After this read, you MUST NOT read any other files for the rest of execution.**
 
 ### Step 1.2: Identify Implementation Steps
 
@@ -60,6 +111,8 @@ For each step in dependency order:
 
 **1. Launch Implementation Agent:**
 
+Use Task tool with this prompt:
+
 ```
 Implement Step [N]: [Step Title]
 
@@ -76,13 +129,18 @@ Context:
 - Expected output: [Copy from task file]
 - Success criteria: [Copy from task file]
 
-When complete, report what was created/modified.
+When complete, report:
+1. What files were created/modified (paths)
+2. Confirmation that success criteria are met
+3. Any issues encountered
 ```
 
-**2. Verify Completion:**
+**2. Use Agent's Report (No Verification for This Pattern)**
 
-- Check file exists / operation completed
-- Basic validation (valid JSON, file not empty, etc.)
+- Agent reports what was created → Use this information
+- This pattern has NO verification per task spec (simple operations like mkdir, delete)
+- **DO NOT read the created files yourself**
+- **DO NOT "verify" yourself** - if verification were needed, task would specify judges
 
 **3. Mark Step Complete**
 
@@ -90,7 +148,11 @@ When complete, report what was created/modified.
 
 ### Pattern B: Critical Step (Panel of 2 Judges)
 
+**⚠️ MANDATORY: This pattern requires launching judge agents. You MUST NOT skip this or verify yourself.**
+
 **1. Launch Implementation Agent:**
+
+Use Task tool with this prompt:
 
 ```
 Implement Step [N]: [Step Title]
@@ -115,12 +177,20 @@ Constraints:
 - Implement exactly what is specified, no more, no less
 - Follow existing patterns in the codebase
 
-When complete, report what was created/modified.
+When complete, report:
+1. What files were created/modified (paths)
+2. Confirmation of completion
 ```
 
 **2. Wait for Completion**
 
-**3. Launch 2 Judge Agents in Parallel:**
+- Receive the agent's report
+- Note the artifact path(s) from the report
+- **DO NOT read the artifact yourself**
+
+**3. Launch 2 Judge Agents in Parallel (MANDATORY):**
+
+**You MUST launch these judges. Do NOT skip. Do NOT verify yourself.**
 
 **Judge 1:**
 
@@ -188,11 +258,13 @@ Return structured evaluation report with:
 
 ### Pattern C: Multi-Item Step (Per-Item Judges)
 
+**⚠️ MANDATORY: Each item requires its own judge agent. You MUST NOT skip or verify yourself.**
+
 For steps that create multiple similar items:
 
 **1. Launch Implementation Agents in Parallel (one per item):**
 
-For each item in the step's item list:
+Use Task tool for EACH item (launch all in parallel):
 
 ```
 Implement Step [N], Item: [Item Name]
@@ -213,14 +285,22 @@ Context:
 Reference patterns (if applicable):
 - [Path to reference file for this item type]
 
-When complete, report what was created.
+When complete, report:
+1. File path created
+2. Confirmation of completion
 ```
 
 **2. Wait for All Completions**
 
-**3. Launch Judge Agents in Parallel (one per item):**
+- Collect all agent reports
+- Note all artifact paths
+- **DO NOT read any of the created files yourself**
 
-For each item:
+**3. Launch Judge Agents in Parallel (one per item) - MANDATORY:**
+
+**You MUST launch a judge for EACH item. Do NOT skip any. Do NOT verify yourself.**
+
+For each item, use Task tool:
 
 ```
 Read .claude/agents/judge.md
@@ -252,6 +332,18 @@ Return structured evaluation report.
 - Present failing items with judge feedback
 - Ask: "Should I fix failing items?"
 - If yes, re-implement only failing items and re-verify
+
+---
+
+## ⚠️ CHECKPOINT: Before Proceeding
+
+Before moving to Phase 3, verify you followed the rules:
+
+- [ ] Did you launch sub-agents for ALL implementations?
+- [ ] Did you launch judge agents for ALL verifications (not skip any)?
+- [ ] Did you avoid reading ANY artifact files yourself?
+
+**If you read files other than the task file, you are doing it wrong. STOP and restart.**
 
 ---
 
@@ -590,6 +682,21 @@ Re-verification:
 ## Checklist
 
 Before completing implementation:
+
+### Context Protection (CRITICAL)
+
+- [ ] Read ONLY the task file (`.beads/issues/$TASK_ID.md`) - no other files
+- [ ] Did NOT read implementation outputs, reference files, or artifacts
+- [ ] Used sub-agent reports for status - did NOT read files to "check"
+
+### Delegation
+
+- [ ] ALL implementations done by sub-agents via Task tool
+- [ ] ALL verifications done by judge agents via Task tool
+- [ ] Did NOT perform any verification yourself
+- [ ] Did NOT skip any verification steps
+
+### Execution Quality
 
 - [ ] All steps executed in dependency order
 - [ ] Parallel steps launched simultaneously (not sequentially)

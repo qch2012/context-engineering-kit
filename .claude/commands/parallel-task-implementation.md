@@ -18,6 +18,7 @@ This command transforms sequential implementation plans into parallelized execut
 4. Creating a visual dependency diagram
 5. Grouping tightly coupled work into single steps
 6. Using "MUST" language for parallel execution requirements
+7. Assigning appropriate agent types based on output type and complexity
 </context>
 
 <workflow>
@@ -103,6 +104,7 @@ Rewrite each step with:
 
 ### Step N: [Title]
 
+**Agent:** [Agent type - see Agent Selection Guide below]
 **Depends on:** [List of step numbers, or "None"]
 **Parallel with:** [List of step numbers that share same dependencies]
 **Note:** [If contains parallelizable sub-tasks] Individual [items] MUST be [action] in parallel by multiple agents
@@ -127,10 +129,10 @@ Rewrite each step with:
 - Be explicit about what enables parallelization
 - Add tables for sub-tasks that parallelize:
 
-| Sub-task | Description | Can Parallel |
-|----------|-------------|--------------|
-| task-1   | Description | Yes |
-| task-2   | Description | Yes |
+| Sub-task | Description | Agent | Can Parallel |
+|----------|-------------|-------|--------------|
+| task-1   | Description | opus | Yes |
+| task-2   | Description | opus | Yes |
 
 ## Phase 6: Update Task File
 
@@ -142,7 +144,10 @@ Rewrite each step with:
    ```
    You MUST launch for each step separate agent, instead of performing all steps by self. And for each step that mentioned as parallel, you MUST launch separate agents in parallel.
 
-   **CRITICAL:** For each agent you MUST provide path to task file and prompt which step he must implement. And requirement that agent should implement exactly it, not more, not less, not other steps.
+   **CRITICAL:** For each agent you MUST:
+   1. Use the **Agent** type specified in the step (e.g., `haiku`, `sonnet`, `sdd:tech-writer`)
+   2. Provide path to task file and prompt which step to implement
+   3. Require agent to implement exactly that step, not more, not less, not other steps
    ```
 
 3. **Add Parallelization Overview diagram**
@@ -159,6 +164,13 @@ Rewrite each step with:
 ### 0. Sub-Agent Execution (CRITICAL)
 
 You MUST launch for each step separate agent, instead of performing all steps by self. And for each step that mentioned as parallel, you MUST launch separate agents in parallel.
+
+**Agent type selection:**
+- Documentation output → `sdd:tech-writer`
+- Source code output → `sdd:developer`
+- Trivial/mechanical operations → `haiku`
+- High-volume, simple pattern work → `sonnet`
+- Everything else (default) → `opus`
 
 This directive MUST be added to every parallelized task file, right after the `## Implementation Process` heading.
 
@@ -203,6 +215,111 @@ When a step contains multiple independent items, make parallelization explicit:
 - `Parallel with: Step 2b, Step 3` - Same dependencies, run together
 
 </parallelization_principles>
+
+<agent_selection>
+
+## Agent Selection Guide
+
+### Selection Principle: OUTPUT TYPE DETERMINES AGENT
+
+Choose agent STRICTLY based on what the step produces, NOT what it reads or analyzes.
+
+### Specialized Agents (USE ONLY WHEN OUTPUT EXACTLY MATCHES)
+
+| Agent | ONLY Use When Output Is | NEVER Use For |
+|-------|------------------------|---------------|
+| `sdd:tech-writer` | Documentation files (README, guides, .md docs) | Code, configs, analysis |
+| `sdd:developer` | Source code, implementation files | Docs, configs, planning |
+| `sdd:software-architect` | Architecture plans, design documents | Implementation, docs |
+| `sdd:tech-lead` | Task breakdowns, technical specifications | Code, docs |
+| `sdd:business-analyst` | Requirements documents, user stories | Code, technical docs |
+| `sdd:researcher` | Research reports, technology evaluations | Code, implementation |
+| `sdd:code-explorer` | Codebase analysis reports | Code changes, docs |
+| `code-review:code-reviewer` | Code review feedback | Code changes |
+| `code-review:bug-hunter` | Bug analysis reports | Bug fixes (code) |
+| `judge` | Evaluation scores, verification results | Any implementation |
+
+### General Agents (USE FOR EVERYTHING ELSE)
+
+| Agent | When to Use | Examples |
+|-------|-------------|----------|
+| `opus` | **Default/standard choice**. Safe for any task. Use when correctness matters, decisions are nuanced, or you're unsure. | Most implementation, code writing, complex logic, architectural decisions |
+| `sonnet` | Task is **not complex but high volume** - many similar steps, large context to process, repetitive work. | Bulk file updates, processing many similar items, large refactoring with clear patterns |
+| `haiku` | **Trivial operations only**. Simple, mechanical tasks with no decision-making. | Directory creation, file deletion, simple config edits, file copying/moving |
+
+### Decision Flow
+
+```
+1. What is the PRIMARY OUTPUT of this step?
+   │
+   ├─► Documentation (.md, README, guides)
+   │   └─► sdd:tech-writer
+   │
+   ├─► Source code implementation
+   │   └─► sdd:developer
+   │
+   ├─► Architecture/design document
+   │   └─► sdd:software-architect
+   │
+   ├─► Task breakdown/specs
+   │   └─► sdd:tech-lead
+   │
+   ├─► Requirements/user stories
+   │   └─► sdd:business-analyst
+   │
+   ├─► Research/evaluation report
+   │   └─► sdd:researcher
+   │
+   ├─► Code review feedback
+   │   └─► code-review:code-reviewer
+   │
+   ├─► Verification/evaluation
+   │   └─► judge
+   │
+   └─► Mixed/Other outputs
+       │
+       └─► Is it trivial/mechanical?
+           │
+           ├─► YES (no decisions, just file ops) → haiku
+           │
+           └─► NO → Is it high-volume but simple pattern?
+               │
+               ├─► YES (many similar items, bulk work) → sonnet
+               │
+               └─► NO or UNSURE → opus (default)
+```
+
+### Common Mistakes to AVOID
+
+| Wrong | Why | Correct |
+|-------|-----|---------|
+| `sdd:tech-writer` for updating plugin.json | JSON config is NOT documentation | `haiku` or `opus` |
+| `sdd:developer` for writing README | README is documentation | `sdd:tech-writer` |
+| `sonnet` for complex decisions | Sonnet is for volume, not complexity | `opus` |
+| `haiku` for anything requiring judgment | Haiku is for mechanical tasks only | `opus` |
+| `sdd:code-explorer` for fixing bugs | Explorer analyzes, doesn't implement | `sdd:developer` |
+| `sdd:researcher` for writing code | Researcher researches, doesn't code | `sdd:developer` |
+| `judge` for implementing features | Judge evaluates, doesn't implement | `sdd:developer` or `opus` |
+
+### Examples by Step Type
+
+| Step Type | Output | Agent | Rationale |
+|-----------|--------|-------|-----------|
+| Create directories | Folders | `haiku` | Trivial, mechanical |
+| Create single config file | JSON/YAML | `haiku` | Simple, no decisions |
+| Write utility function | Code | `sdd:developer` | Source code output |
+| Write complex algorithm | Code | `sdd:developer` | Source code output |
+| Update README | Documentation | `sdd:tech-writer` | Documentation output |
+| Write API docs | Documentation | `sdd:tech-writer` | Documentation output |
+| Update manifest | JSON config | `opus` | Requires understanding structure |
+| Refactor architecture | Code | `opus` | Complex decisions |
+| Create workflow command | Markdown command | `opus` | Requires careful design |
+| Clean up old files | File deletions | `haiku` | Trivial, mechanical |
+| Sync/copy files | Copy operations | `haiku` | Trivial, mechanical |
+| Update 10+ similar files | Bulk edits | `sonnet` | High volume, simple pattern |
+| Process large codebase | Many files | `sonnet` | High context, repetitive |
+
+</agent_selection>
 
 <common_patterns>
 
@@ -276,14 +393,16 @@ Step 2      Step 3      Step 4
 Before completing parallelization:
 
 - [ ] **Sub-agent execution directive added** (exact text after `## Implementation Process`)
+- [ ] **All steps have `Agent:` property** (following Agent Selection Guide)
 - [ ] **All steps have `Depends on:` property**
 - [ ] **Parallel opportunities identified with `Parallel with:`**
 - [ ] **Visual dependency diagram added**
 - [ ] **"MUST" used for parallel execution requirements** (not "can")
 - [ ] **Tightly coupled steps merged** (no artificial splitting)
-- [ ] **Sub-task tables include `Can Parallel` column**
+- [ ] **Sub-task tables include `Agent` and `Can Parallel` columns**
 - [ ] **High-level structure steps come before detail steps**
 - [ ] **Horizontal rules (---) separate steps**
+- [ ] **Agent selection verified**: specialized agents ONLY for exact output matches, general agents by complexity
 </checklist>
 
 <example_session>
@@ -327,38 +446,49 @@ Current steps (sequential):
 - "Update Plugin README" + "Sync Docs README" → Merge into single step
 - Step 6b and 6c shared same dependency → Consider merging if related
 
-**Phase 4: Building dependency graph...**
+**Phase 4: Building dependency graph with agents...**
 
 ```
-Step 1 (Directory Structure)
+Step 1 (Directory Structure) [haiku]
     │
     ├───────────────────┬───────────────────┐
     ▼                   ▼                   ▼
 Step 2a              Step 2b             Step 3
 (FPF Agent)     (Workflow Command)   (Utility Commands)
+[opus]              [opus]              [opus]
     │                   │                   │
     └─────────┬─────────┘                   │
               ▼                             │
            Step 4                           │
        (Task Files)                         │
+         [opus]                             │
               │                             │
               └─────────────┬───────────────┘
                             ▼
                          Step 5
                     (Plugin Manifest)
+                        [opus]
                             │
     ┌───────────────────────┼
     ▼                       ▼
 Step 6a                  Step 6b
 (Plugin README)      (Other Docs)
+[sdd:tech-writer]   [sdd:tech-writer]
     │                       │
     └───────────────────────┴
                             │
                             ▼
                          Step 7
-
                     (Clean Up Old Commands)
+                        [haiku]
 ```
+
+*Agent selection rationale:*
+- Step 1: `haiku` - Trivial directory creation (mechanical)
+- Steps 2a, 2b, 3, 4: `opus` - Require careful design decisions (default)
+- Step 5: `opus` - Manifest requires understanding structure
+- Steps 6a, 6b: `sdd:tech-writer` - Documentation files (README.md)
+- Step 7: `haiku` - Trivial file deletions (mechanical)
 
 **Phase 5: Restructuring steps...**
 
@@ -377,11 +507,18 @@ Key changes:
 Task updated with:
 
 - Sub-agent execution directive added after `## Implementation Process`
-- Parallelization Overview diagram
+- Parallelization Overview diagram (with agent types)
 - 7 main steps (was 8, merged docs)
+- Explicit `Agent:` for each step (following selection guide)
 - Explicit `Depends on:` for each step
 - `Parallel with:` annotations
 - "MUST" language for parallel execution
+
+*Agent distribution:*
+- `haiku`: 2 steps (trivial/mechanical)
+- `opus`: 5 steps (default, requires decisions)
+- `sdd:tech-writer`: 2 steps (documentation)
+- `sonnet`: 0 steps (no high-volume repetitive work)
 
 </example_session>
 
@@ -392,6 +529,13 @@ After parallelization, report:
 2. **Steps Reorganized**: X steps (from Y original)
 3. **Steps Merged**: X steps combined
 4. **Max Parallelization Depth**: X steps can run simultaneously at peak
+5. **Agent Distribution**:
+   - `opus`: X steps (default)
+   - `sonnet`: X steps (high-volume)
+   - `haiku`: X steps (trivial)
+   - `sdd:tech-writer`: X steps (docs)
+   - `sdd:developer`: X steps (code)
+   - [other specialized agents if used]
 
 Suggest: `mb show $TASK_ID` to review the parallelized task
 </output>
