@@ -30,7 +30,7 @@ Then, audit for bias, decide, and document the rationale in a durable record.
 
 The framework addresses a fundamental challenge in AI-assisted development: making decision-making processes transparent and auditable. Rather than having AI jump to solutions, FPF enforces generating competing hypotheses, checking them logically, testing against evidence, then letting developers choose the path forward.
 
-> **Warning:** This plugin loads the core FPF specification into context, which is large (~600k tokens). As a result it loaded into a subagent with Sonnet[1m] model. But it can consume your token limit quickly.
+> **Warning:** This plugin loads the core FPF specification into context, which is large (~600k tokens). As a result it loaded into a subagent with Sonnet[1m] model. But such agent can consume your token limit quickly.
 
 Implementation based on [quint-code](https://github.com/m0n0x41d/quint-code) by m0n0x41d.
 

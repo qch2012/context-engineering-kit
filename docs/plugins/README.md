@@ -86,16 +86,17 @@ TDD methodology with anti-pattern detection and testing best practices.
 
 #### Subagent-Driven Development
 
-Task delegation pattern that dispatches fresh subagents with quality gates between tasks.
+Execution framework for parallel/sequential task dispatch, competitive generation, and multi-agent evaluation with quality gates.
 
 **Key Features:**
 
-* Fresh context for each task
-* Code review between tasks
-* Fast iteration with quality control
+* **Execution patterns**: parallel (`do-in-parallel`), sequential (`do-in-steps`), competitive (`do-competitively`), exploration (`tree-of-thoughts`)
+* **Evaluation**: single judge (`judge`) or multi-judge debate (`judge-with-debate`)
+* Fresh context isolation per task
+* Quality gates with code review between tasks
 * Multi-agent architecture patterns (supervisor, peer-to-peer, hierarchical)
 
-**When to use:** For complex features requiring multiple independent tasks or when single-agent context limits are exceeded.
+**When to use:** For complex features requiring multiple independent tasks, competitive solution generation, or when single-agent context limits are exceeded.
 
 [Full Documentation](sadd/)
 
@@ -115,7 +116,7 @@ Comprehensive Spec-Driven Development workflow using specialized agents for each
 
 #### First Principles Framework
 
-Structured reasoning methodology implementing the ADI (Abduction-Deduction-Induction) cycle for auditable decision-making.
+Structured reasoning methodology implementing the ADI (Abduction-Deduction-Induction) cycle for auditable decision-making. The FPF plugin implements structured reasoning using [the First Principles Framework](https://github.com/ailev/FPF) methodology developed by Anatoly Levenchuk a methodology for rigorous, auditable reasoning. The killer feature is turning the black box of AI reasoning into a transparent, evidence-backed audit trail. 
 
 **Key Features:**
 
@@ -125,6 +126,12 @@ Structured reasoning methodology implementing the ADI (Abduction-Deduction-Induc
 * Trust calculus with Weakest Link principle
 * Design Rationale Records (DRRs)
 * Evidence freshness management
+
+The core cycle follows three modes of inference:
+
+- Abduction — Generate competing hypotheses (don't anchor on the first idea).
+- Deduction — Verify logic and constraints (does the idea make sense?).
+- Induction — Gather evidence through tests or research (does the idea work in reality?).
 
 **When to use:** For architectural decisions with long-term consequences requiring auditable reasoning trails.
 

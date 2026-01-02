@@ -70,6 +70,23 @@ Test-first development methodology with agent-orchestrated coverage. [More info]
 - `/tdd:write-tests` - Systematically add test coverage for local code changes using specialized review and development agents
 - `/tdd:fix-tests` - Fix failing tests after business logic changes or refactoring using orchestrated agents
 
+### Subagent-Driven Development (SADD)
+
+Execution framework for parallel/sequential task dispatch, competitive generation, and multi-agent evaluation. [More info](../plugins/sadd/README.md).
+
+#### Execution Commands
+
+- `/sadd:launch-sub-agent` - Launch focused sub-agents with intelligent model selection, Zero-shot CoT reasoning, and self-critique verification
+- `/sadd:do-in-parallel` - Execute the same task across multiple independent targets in parallel with context isolation
+- `/sadd:do-in-steps` - Execute complex tasks through sequential sub-agent orchestration with automatic decomposition and context passing
+- `/sadd:do-competitively` - Execute tasks through competitive generation, multi-judge evaluation, and evidence-based synthesis to produce superior results
+- `/sadd:tree-of-thoughts` - Execute complex reasoning through systematic exploration of solution space, pruning unpromising branches, and synthesizing the best solution
+
+#### Evaluation Commands
+
+- `/sadd:judge-with-debate` - Evaluate solutions through iterative multi-judge debate with consensus building or disagreement reporting
+- `/sadd:judge` - Evaluate completed work using LLM-as-Judge with structured rubrics and evidence-based scoring
+
 ### Docs
 
 Documentation management commands. [More info](../plugins/docs/README.md).

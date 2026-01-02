@@ -292,6 +292,9 @@ Execution framework for competitive generation, multi-agent evaluation, and suba
 
 **Commands**
 
+- `/sadd:launch-sub-agent` - Launch focused sub-agents with intelligent model selection, Zero-shot CoT reasoning, and self-critique verification
+- `/sadd:do-in-parallel` - Execute the same task across multiple independent targets in parallel with context isolation
+- `/sadd:do-in-steps` - Execute complex tasks through sequential sub-agent orchestration with automatic decomposition and context passing
 - `/sadd:do-competitively` - Execute tasks through competitive generation, multi-judge evaluation, and evidence-based synthesis to produce superior results
 - `/sadd:tree-of-thoughts` - Execute complex reasoning through systematic exploration of solution space, pruning unpromising branches, and synthesizing the best solution
 - `/sadd:judge-with-debate` - Evaluate solutions through iterative multi-judge debate with consensus building or disagreement reporting
@@ -387,7 +390,24 @@ Supporting research and techniques:
 
 ### FPF - First Principles Framework
 
-Structured reasoning using the First Principles Framework (FPF) methodology. Uses workflow command pattern with specialized fpf-agent for hypothesis generation, verification, and auditable decision-making.
+Structured reasoning plugin implements the **[First Principles Framework (FPF)](https://github.com/ailev/FPF)** by Anatoly Levenchuk — a methodology for rigorous, auditable reasoning. The killer feature is turning the black box of AI reasoning into a transparent, evidence-backed audit trail. The plugin makes AI decision-making transparent and auditable. Instead of jumping to solutions, FPF enforces generating competing hypotheses, checking them logically, testing against evidence, then letting developers choose.
+
+Key principles:
+
+- **Transparent reasoning** - Full audit trail from hypothesis to decision
+- **Hypothesis-driven** - Generate 3-5 competing alternatives before evaluating
+- **Evidence-based** - Computed trust scores, not estimates
+- **Human-in-the-loop** - AI generates options; humans decide (Transformer Mandate)
+
+The core cycle follows three modes of inference:
+
+1. **Abduction** — Generate competing hypotheses (don't anchor on the first idea).
+2. **Deduction** — Verify logic and constraints (does the idea make sense?).
+3. **Induction** — Gather evidence through tests or research (does the idea work in reality?).
+
+Then, audit for bias, decide, and document the rationale in a durable record.
+
+> **Warning:** This plugin loads the core FPF specification into context, which is large (~600k tokens). As a result it loaded into a subagent with Sonnet[1m] model. But such agent can consume your token limit quickly.
 
 **How to install**
 
