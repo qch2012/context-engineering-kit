@@ -164,7 +164,7 @@ Launch these three phases **in parallel** immediately after Phase 1 completes:
 #### Phase 2a: Research
 
 **Model:** `sonnet`
-**Agent:** `sdd:researcher`
+**Agent:** `researcher`
 **Depends on:** Phase 1
 **Purpose:** Gather relevant resources, documentation, libraries, and prior art
 
@@ -174,8 +174,6 @@ Launch agent:
 - **Prompt**:
 
   ```
-  Read .claude/tasks/research-task.md and execute.
-
   Task File: <task file path from Phase 1>
   Task Title: <title from Phase 1>
   ```
@@ -183,6 +181,7 @@ Launch agent:
 **Capture:**
 
 - Research file path (e.g., `.specs/research/research-{name}.md`)
+- Scratchpad file path (e.g., `.specs/scratchpad/<hex-id>.md`)
 - Number of resources gathered
 - Key recommendation summary
 
@@ -249,7 +248,7 @@ After **each** parallel phase completes, launch its respective judge **with the 
 #### Judge 2a: Validate Research
 
 **Model:** `sonnet`
-**Agent:** `sdd:researcher`
+**Agent:** `researcher`
 **Depends on:** Phase 2a completion
 **Purpose:** Validate research completeness and relevance
 
