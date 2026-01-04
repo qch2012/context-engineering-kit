@@ -244,7 +244,7 @@ Assign appropriate agents based on OUTPUT TYPE and complexity:
 |------|----------------|-------|-----------|
 | 1 | Directories | haiku | Trivial, mechanical |
 | 2a | Source code | opus | Requires design decisions |
-| 2b | Documentation | sdd:tech-writer | README.md output |
+| 2b | Documentation | tech-writer | README.md output |
 ```
 
 #### Agent Selection Guide
@@ -259,13 +259,13 @@ Use agents that are available in the project. There are examples of agents that 
 
 | Agent | ONLY Use When Output Is | NEVER Use For |
 |-------|------------------------|---------------|
-| `sdd:tech-writer` | Documentation files (README, guides, .md docs) | Code, configs, analysis |
-| `sdd:developer` | Source code, implementation files | Docs, configs, planning |
-| `sdd:software-architect` | Architecture plans, design documents | Implementation, docs |
-| `sdd:tech-lead` | Task breakdowns, technical specifications | Code, docs |
-| `sdd:business-analyst` | Requirements documents, user stories | Code, technical docs |
-| `sdd:researcher` | Research reports, technology evaluations | Code, implementation |
-| `sdd:code-explorer` | Codebase analysis reports | Code changes, docs |
+| `tech-writer` | Documentation files (README, guides, .md docs) | Code, configs, analysis |
+| `developer` | Source code, implementation files | Docs, configs, planning |
+| `software-architect` | Architecture plans, design documents | Implementation, docs |
+| `tech-lead` | Task breakdowns, technical specifications | Code, docs |
+| `business-analyst` | Requirements documents, user stories | Code, technical docs |
+| `researcher` | Research reports, technology evaluations | Code, implementation |
+| `code-explorer` | Codebase analysis reports | Code changes, docs |
 | `code-review:code-reviewer` | Code review feedback | Code changes |
 | `code-review:bug-hunter` | Bug analysis reports | Bug fixes (code) |
 
@@ -285,22 +285,22 @@ Also used as general agents for any task when unsure about specialized agents.
 1. What is the PRIMARY OUTPUT of this step?
    │
    ├─► Documentation (.md, README, guides)
-   │   └─► sdd:tech-writer
+   │   └─► tech-writer
    │
    ├─► Source code implementation
-   │   └─► sdd:developer
+   │   └─► developer
    │
    ├─► Architecture/design document
-   │   └─► sdd:software-architect
+   │   └─► software-architect
    │
    ├─► Task breakdown/specs
-   │   └─► sdd:tech-lead
+   │   └─► tech-lead
    │
    ├─► Requirements/user stories
-   │   └─► sdd:business-analyst
+   │   └─► business-analyst
    │
    ├─► Research/evaluation report
-   │   └─► sdd:researcher
+   │   └─► researcher
    │
    ├─► Code review feedback
    │   └─► code-review:code-reviewer
@@ -322,12 +322,12 @@ Also used as general agents for any task when unsure about specialized agents.
 
 | Wrong | Why | Correct |
 |-------|-----|---------|
-| `sdd:tech-writer` for updating plugin.json | JSON config is NOT documentation | `haiku` or `opus` |
-| `sdd:developer` for writing README | README is documentation | `sdd:tech-writer` |
+| `tech-writer` for updating plugin.json | JSON config is NOT documentation | `haiku` or `opus` |
+| `developer` for writing README | README is documentation | `tech-writer` |
 | `sonnet` for complex decisions | Sonnet is for volume, not complexity | `opus` |
 | `haiku` for anything requiring judgment | Haiku is for mechanical tasks only | `opus` |
-| `sdd:code-explorer` for fixing bugs | Explorer analyzes, doesn't implement | `sdd:developer` |
-| `sdd:researcher` for writing code | Researcher researches, doesn't code | `sdd:developer` |
+| `code-explorer` for fixing bugs | Explorer analyzes, doesn't implement | `developer` |
+| `researcher` for writing code | Researcher researches, doesn't code | `developer` |
 
 ##### Examples by Step Type
 
@@ -335,10 +335,10 @@ Also used as general agents for any task when unsure about specialized agents.
 |-----------|--------|-------|-----------|
 | Create directories | Folders | `haiku` | Trivial, mechanical |
 | Create single config file | JSON/YAML | `haiku` | Simple, no decisions |
-| Write utility function | Code | `sdd:developer` | Source code output |
-| Write complex algorithm | Code | `sdd:developer` | Source code output |
-| Update README | Documentation | `sdd:tech-writer` | Documentation output |
-| Write API docs | Documentation | `sdd:tech-writer` | Documentation output |
+| Write utility function | Code | `developer` | Source code output |
+| Write complex algorithm | Code | `developer` | Source code output |
+| Update README | Documentation | `tech-writer` | Documentation output |
+| Write API docs | Documentation | `tech-writer` | Documentation output |
 | Update manifest | JSON config | `opus` | Requires understanding structure |
 | Refactor architecture | Code | `opus` | Complex decisions |
 | Create workflow command | Markdown command | `opus` | Requires careful design |
@@ -361,7 +361,7 @@ Add this text IMMEDIATELY after `## Implementation Process` heading:
 You MUST launch for each step a separate agent, instead of performing all steps yourself. And for each step marked as parallel, you MUST launch separate agents in parallel.
 
 **CRITICAL:** For each agent you MUST:
-1. Use the **Agent** type specified in the step (e.g., `haiku`, `sonnet`, `sdd:tech-writer`)
+1. Use the **Agent** type specified in the step (e.g., `haiku`, `sonnet`, `tech-writer`)
 2. Provide path to task file and prompt which step to implement
 3. Require agent to implement exactly that step, not more, not less, not other steps
 ```
@@ -624,8 +624,8 @@ Agent Distribution:
   - opus: X steps (default)
   - sonnet: X steps (high-volume)
   - haiku: X steps (trivial)
-  - sdd:tech-writer: X steps (docs)
-  - sdd:developer: X steps (code)
+  - tech-writer: X steps (docs)
+  - developer: X steps (code)
   - [other specialized agents if used]
 
 Self-Critique: [Count] questions verified, [Count] gaps fixed
@@ -699,7 +699,7 @@ Step 2a              Step 2b             Step 3
     ▼                       ▼
 Step 6a                  Step 6b
 (Plugin README)      (Other Docs)
-[sdd:tech-writer]   [sdd:tech-writer]
+[tech-writer]   [tech-writer]
     │                       │
     └───────────────────────┴
                             │
@@ -714,7 +714,7 @@ Step 6a                  Step 6b
 - Step 1: `haiku` - Trivial directory creation (mechanical)
 - Steps 2a, 2b, 3, 4: `opus` - Require careful design decisions (default)
 - Step 5: `opus` - Manifest requires understanding structure
-- Steps 6a, 6b: `sdd:tech-writer` - Documentation files (README.md)
+- Steps 6a, 6b: `tech-writer` - Documentation files (README.md)
 - Step 7: `haiku` - Trivial file deletions (mechanical)
 
 **Restructuring steps...**
@@ -745,6 +745,6 @@ Task updated with:
 
 - `haiku`: 2 steps (trivial/mechanical)
 - `opus`: 5 steps (default, requires decisions)
-- `sdd:tech-writer`: 2 steps (documentation)
+- `tech-writer`: 2 steps (documentation)
 - `sonnet`: 0 steps (no high-volume repetitive work)
 
