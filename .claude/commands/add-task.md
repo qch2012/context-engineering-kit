@@ -217,7 +217,7 @@ Launch agent:
 #### Phase 2c: Business Analysis
 
 **Model:** `opus`
-**Agent:** `sdd:business-analyst`
+**Agent:** `business-analyst`
 **Depends on:** Phase 1
 **Purpose:** Refine description and create acceptance criteria
 
@@ -227,13 +227,13 @@ Launch agent:
 - **Prompt**:
 
   ```
-  Read .claude/tasks/business-analysis-task.md and execute.
-
   Task File: <task file path from Phase 1>
+  Task Title: <title from Phase 1>
   ```
 
 **Capture:**
 
+- Scratchpad file path (e.g., `.specs/scratchpad/<hex-id>.md`)
 - Acceptance criteria count
 - Scope defined (yes/no)
 - User scenarios documented
@@ -345,7 +345,7 @@ Launch judge:
 #### Judge 2c: Validate Business Analysis
 
 **Model:** `opus`
-**Agent:** `sdd:business-analyst`
+**Agent:** `business-analyst`
 **Depends on:** Phase 2c completion
 **Purpose:** Validate acceptance criteria quality and scope definition
 
