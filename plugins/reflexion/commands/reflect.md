@@ -81,11 +81,30 @@ Before proceeding, evaluate your most recent output against these criteria:
    - [ ] Are there edge cases that haven't been considered?
    - [ ] Could there be unintended side effects?
 
-4. **Fact-Checking Required**
+4. **Dependency & Impact Verification** 
+   - [ ] For ANY proposed addition/deletion/modification, have you checked for dependencies?
+   - [ ] Have you searched for related decisions that may be superseded or supersede this?
+   - [ ] Have you checked the configuration or docs (for example AUTHORITATIVE.yaml) for active evaluations or status?
+   - [ ] Have you searched the ecosystem for files/processes that depend on items being changed?
+   - [ ] If recommending removal of anything, have you verified nothing depends on it?
+
+
+
+   **HARD RULE:** If ANY check reveals active dependencies, evaluations, or pending decisions, FLAG THIS IN THE EVALUATION. Do not approve work that recommends changes without dependency verification.
+
+5. **Fact-Checking Required**
    - [ ] Have you made any claims about performance? (needs verification)
    - [ ] Have you stated any technical facts? (needs source/verification)
    - [ ] Have you referenced best practices? (needs validation)
    - [ ] Have you made security assertions? (needs careful review)
+
+6. **Generated Artifact Verification** (CRITICAL for any generated code/content)
+   - [ ] **Cross-references validated**: Any references to external tools, APIs, or files verified to exist with correct names
+   - [ ] **Security scan**: Generated files checked for sensitive information (absolute paths with usernames, credentials, internal URLs)
+   - [ ] **Documentation sync**: If counts, stats, or references changed, all documentation citing them updated
+   - [ ] **State verification**: Claims about system state verified with actual commands, not memory
+
+   **HARD RULE:** Do not declare work complete until you confirm claims match reality.
 
 ### Step 2: Decision Point
 
@@ -526,7 +545,18 @@ Automatically trigger refinement if any of these conditions are met:
    - No library search for common problems
    - No consideration of existing services
 
-4. **Architecture Violations**
+4. **Dependency/Impact Gaps** (CRITICAL)
+   - Recommended deletion/removal without dependency check
+   - Cited prior decision without checking for superseding decisions
+   - Proposed config changes without checking related authoritive documents or configuration (example: AUTHORITATIVE.yaml)
+   - Modified ecosystem files without searching for dependents
+   - Any destructive action without passing related pre-modification gates or checklists
+   - Generated cross-references without validation against source of truth
+   - Committed files containing absolute paths or usernames
+   - Changed counts/stats without updating referencing documentation
+   - Declared complete without running verification commands
+
+5. **Architecture Violations**
    - Business logic in controllers/views
    - Domain logic depending on infrastructure
    - Unclear boundaries between contexts
@@ -548,6 +578,11 @@ Before finalizing any output:
 - [ ] Did I search for existing libraries before writing custom code?
 - [ ] Is the architecture aligned with Clean Architecture/DDD principles?
 - [ ] Are names domain-specific rather than generic (utils/helpers)?
+- [ ] Any tool/API/file references verified against actual inventory (not assumed)
+- [ ] Generated files scanned for sensitive info (paths, usernames, credentials)
+- [ ] All docs referencing changed values have been updated
+- [ ] Claims verified with actual commands, not memory
+- [ ] For any additions/deletions/modifications, have I verified no active dependencies, evaluations, or superseding decisions exist?
 
 ### Reflexion Questions
 
