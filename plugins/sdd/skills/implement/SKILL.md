@@ -1,7 +1,7 @@
 ---
-description: Implement a task with automated LLM-as-Judge verification for critical steps
+name: implement
+description: Implement a task with automated LLM-as-Judge verification for critical steps 
 argument-hint: Task file name (e.g., add-validation.feature.md) with implementation steps defined
-allowed-tools: Task, Read, TodoWrite, Bash
 ---
 
 # Implement Task with Verification
@@ -353,7 +353,7 @@ When complete, report:
 **Evaluation 1 & 2** (launch both in parallel with same prompt structure):
 
 ```
-Read .claude/prompts/judge.md for evaluation methodology.
+Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology.
 
 Evaluate artifact at: [artifact_path from implementation agent report]
 
@@ -441,7 +441,7 @@ When complete, report:
 For each item:
 
 ```
-Read .claude/prompts/judge.md for evaluation methodology.
+Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology.
 
 Evaluate artifact at: [item_path from implementation agent report]
 

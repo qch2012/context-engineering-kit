@@ -1,7 +1,7 @@
 ---
-description: Refine, parallelize, and verify a draft task specification
+name: plan
+description: Refine, parallelize, and verify a draft task specification into a fully planned implementation-ready task
 argument-hint: Path to draft task file (e.g., ".specs/tasks/draft/add-validation.feature.md") [options]
-allowed-tools: Task, Read, Write, Bash(ls), Bash(mkdir), Bash(mv), AskUserQuestion, TodoWrite
 ---
 
 # Refine Task Workflow
@@ -471,7 +471,7 @@ Launch agent:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/analyse-business-requirements.md and execute it exactly as is!
+  Read @./analyse-business-requirements.md and execute it exactly as is!
 
   Task File: <TASK_FILE>
   Task Title: <title from task file>
@@ -505,7 +505,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to skill file from Phase 2a}
@@ -561,7 +561,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to analysis file from Phase 2b}
@@ -613,7 +613,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to task file from Phase 2c}
@@ -702,7 +702,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to task file after Phase 3}
@@ -788,7 +788,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to task file after Phase 4}
@@ -876,7 +876,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to parallelized task file from Phase 5}
@@ -961,7 +961,7 @@ Launch judge:
 - **Prompt**:
 
   ```
-  Read .claude/prompts/judge.md for evaluation methodology and execute.
+  Read @${CLAUDE_PLUGIN_ROOT}/prompts/judge.md for evaluation methodology and execute.
 
   ### Artifact Path
   {path to task file with verifications from Phase 6}

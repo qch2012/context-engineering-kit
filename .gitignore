@@ -140,3 +140,7 @@ vite.config.ts.timestamp-*
 
 .codemap/
 --ref=master/
+
+
+.specs/scratchpads/
+.specs/reports/
