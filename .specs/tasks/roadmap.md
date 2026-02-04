@@ -1,24 +1,25 @@
 
-
 # Roadmap for V2 release
-
 
 ## Tasks
 
 [] Move all commands to skills format, in order to properly support all installers
 [] Add support for vercel skill installer - but left support for installers that exists now
 [] Publish skills in vercel marketplace
-[] Migrate SDD plugin to v2 version
+[x] Migrate SDD plugin to v2 version
     [x] Fix issues with scratchpad id generation - potentially write script for generation of them
     [x] switch to `git mv` instead of `mv` in order to keep git history clean and avoid conflicts.
-    [] Write a script that create folder setup and adds scratchpad folder to gitignore
-    [] potentially add plan-directly command that allow to plan without using subagents - will move to v2.1
-    [] Add support for flags of `/implementaion` command that allow to increase and decreate amount of guality, amount of iterations allowed, `--human-in-the-loop` flag to allow to pause for human verification after each step and `--refine` flag that will perform refinement of implementation after human feedback or corrections. Need check whether it have `--continue` flag, it not then add it.
-    [] Increase amount of maximum iteration to 3 for planing and 3-4 for implementation phase.
+    [x] Write a script that create folder setup and adds scratchpad folder to gitignore
+    [x] Add support for flags of `/implementaion` command that allow to increase and decreate amount of guality, amount of iterations allowed, `--human-in-the-loop` flag to allow to pause for human verification after each step and `--refine` flag that will perform refinement of implementation after human feedback or corrections. Need check whether it have `--continue` flag, it not then add it.
+    [x] Increase amount of maximum iteration to 3 for planing and 3-4 for implementation phase -> Decided to keep iterations unlimited for now.
 [] Update project readme with new features and changes. Remove majoirty of content and move it to docs/, also verify with another projects on best practices of readme. And update header image to be transparent.
 
+## In consideration for V2.1
 
-## in consideration for V3
+SDD plugin:
+    [] potentially add plan-directly command that allow to plan without using subagents
+
+## In consideration for V3
 
 Possible to create `workflow.yaml` file that will be used to define local pipeline for code development with quality gates and LLM-as-Judge verification. Main focus should be on quality gates they can include:
 
@@ -32,7 +33,6 @@ Possible to create `workflow.yaml` file that will be used to define local pipeli
 - Code complexity analysis using tools like cloc/scc (define maximum allowed lines of code per file, per function, per class), or other code complexity metrics. (Mental complexity, cyclomatic complexity, etc.)
 - Human-in-the-loop verification after each or specific steps of the process.
 
-
 [] Possible to add ast-grep support for code-base impact analysis step. Or even as mcp toof for all agents. Or as part of code quality workflow. It allow to search, lint and rewrite code. And allow to write liniting rules using yaml!
 [] jscpd allow to detected code dublication and support 150 languages.
 
@@ -42,22 +42,21 @@ Possible to create `workflow.yaml` file that will be used to define local pipeli
 
 ## Darft desciption of SDD v2
 
-SDD Plugin: Spec-Driven Development + Continuous Learning + LLM-as-Judge 
+SDD Plugin: Spec-Driven Development + Continuous Learning + LLM-as-Judge
 
 This pluging is designed to consistently produce highest possible quality of solution that LLM agent can produce. Esentially it allow to predictably get results that as close as possible to LLMs benchmark that you using.
 
 Main patterns that implemented in this plugin:
 
-- Multi-agent orcestration for context managment 
+- Multi-agent orcestration for context managment
 - Structured reasoning templates, that include: Zero-shot and Few-shot Chain of Thought, Tree of Thoughts, Problem Decomposition and Self-Critique. Each tailored for specific agent and task that they perform.
 - Quality gates based on LLM-as-Judge, that are used to evaluate the quality of each planing and implementation step using evidence-based scoring and predefined rubrics.
 - Continuous learning agent pattern used in order to build skills that agent will need in order to implement specific task.
 - Spec-driven development pattern based on arc42 specification standard adjusted for LLM capabilities and implemented as structured task planing process.
 
-
 Features and differences from other frameworks, plugins and agentic orcestrators:
 
-- This plugin was able to generate working code aligned with initial prompt in 100% of cases that was tested on real projects. So, if you was able to get use case that it was not able to handle, please report it as an issue. 
+- This plugin was able to generate working code aligned with initial prompt in 100% of cases that was tested on real projects. So, if you was able to get use case that it was not able to handle, please report it as an issue.
 - Main limitation of this workflow is amount of tokens that you willing to spend on each task. Plugin tries to use as much tokens as possible in order to get best results. Within reasonable default limitations. In order to overcome this limitation, each command have predefined parameters that you can configure to balance between quality and speed. For example you can use `--fast` in `/plan` command in order to limit amount of steps, decrease target quality and amount of refinement iterations. On the other hand, you can increase expected result if you wiling to spend more tokens, by using commands like `--target-quality 4.5 --max-iterations 5` that will allow agent iterate more in order to get close to "ideal" results.
 - This plugin is not "vibe" coding solution. It expect that developer that using it know what he want to produce and have some level of understanding how to reach there. So he can incorporate critical information and valuable feedback into the process. But by default it is designed to work from single prompt till the end of the task and make evidence based decisions. Because developer time is more valuable than model time. So it will allways produce working results, but quality of it will be sub-optimal if no human feedback is provided.
 - Need keep in mind that plugin can produce results that better than model can generate theoretically, which mainly depend on amount of time that you willing to spend refining it. Specifically, after generating specification you can correct it or left comments using `//` and then running `/plan --refine` command again. You also can make verifications after each planinig and implementation phase. By majority of known researches human feedback is most effective way to improve results.
@@ -65,7 +64,6 @@ Features and differences from other frameworks, plugins and agentic orcestrators
 - This plugin follows princeple of KISS (Keep It Simple Stupid). So it not yet support epics and roadmaps, because it currently problematic to keep model focused on such long term activities. But it already possible to reach simular results by using `/add-task` command with specifying dependencies between tasks. This way you can produce naturally hierarchial structure of tasks that builds into roadmap. On top of that you can manage and define own process to organaize tasks that more suitable for you and your team.
 - While majority of other frameworks, work best for new projects and greenfield development.This plugin designed to work better the more code you already have and the better structured architecture of your solution. At each planing phase it have **codebase impact analysis** step, that evaluate which exact files cab be affected by your tasks and what patterns better to follow in order to achive desired result.
 - Plugin designed to work as "night build" for your development process. You can write prompt and let it work while you sleep, and you can expect it to produce working result when you return. The amount of time it will spend depends on task complexity, for simple tasks it can work for 30 minutes, for complex tasks it can workk few days.
-
 
 ### Quick start
 
@@ -95,6 +93,7 @@ Run planing process
 ```
 
 It will perform following refinement process in order to update task file with more detailed specification:
+
 ```
 // TODO: add mermaid diagram of the process
 ```
@@ -110,6 +109,7 @@ Once you are happy with specification, you can run implementation process
 ```
 
 It will perform following actions:
+
 ```
 // TODO: add mermaid diagram of the process
 ```
@@ -132,4 +132,3 @@ Once it complete, you can use `context-engineering-kit:git` plugin in order to c
 - `/sdd:implement` -> produce working implementation of the task and verify it, then move it to `.specs/tasks/done/` folder.
 - `/git:commit` -> commit changes
 - `/git:create-pr` -> create pull request
-

@@ -29,11 +29,19 @@ Create a task file in `.specs/tasks/draft/` with:
 
 ### 1. Ensure Directory Structure
 
-Create the task status directories if they don't exist:
+Run the folder creation script to create task directories and configure gitignore:
 
 ```bash
-mkdir -p .specs/tasks/draft/ .specs/tasks/todo .specs/tasks/in-progress .specs/tasks/done
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/create-folders.sh
 ```
+
+This creates:
+
+- `.specs/tasks/draft/` - New tasks awaiting analysis
+- `.specs/tasks/todo/` - Tasks ready to implement
+- `.specs/tasks/in-progress/` - Currently being worked on
+- `.specs/tasks/done/` - Completed tasks
+- `.specs/scratchpad/` - Temporary working files (gitignored)
 
 ### 2. Analyze Input
 
