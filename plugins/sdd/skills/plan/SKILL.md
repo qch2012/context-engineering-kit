@@ -1013,7 +1013,8 @@ After all phases complete:
 1. **Move task file from draft to todo:**
 
    ```bash
-   mv <TASK_FILE> .specs/tasks/todo/
+   git mv <TASK_FILE> .specs/tasks/todo/
+   # Fallback if git not available: mv <TASK_FILE> .specs/tasks/todo/
    ```
 
 2. **Update any references** in research and analysis files if needed

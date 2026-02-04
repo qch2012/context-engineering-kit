@@ -10,8 +10,8 @@
 [] Publish skills in vercel marketplace
 [] Migrate SDD plugin to v2 version
     [x] Fix issues with scratchpad id generation - potentially write script for generation of them
-    [] switch to `git mv` instead of `mv` in order to keep git history clean and avoid conflicts.
-    [] Write a script that create folder setup and adds scratchpad and reports folders to gitignore
+    [x] switch to `git mv` instead of `mv` in order to keep git history clean and avoid conflicts.
+    [] Write a script that create folder setup and adds scratchpad folder to gitignore
     [] potentially add plan-directly command that allow to plan without using subagents - will move to v2.1
     [] Add support for flags of `/implementaion` command that allow to increase and decreate amount of guality, amount of iterations allowed, `--human-in-the-loop` flag to allow to pause for human verification after each step and `--refine` flag that will perform refinement of implementation after human feedback or corrections. Need check whether it have `--continue` flag, it not then add it.
     [] Increase amount of maximum iteration to 3 for planing and 3-4 for implementation phase.

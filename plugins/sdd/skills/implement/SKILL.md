@@ -207,7 +207,8 @@ Parse user input to get the task file path and arguments.
 **If task is in `todo/` folder:**
 
 ```bash
-mv .specs/tasks/todo/$TASK_FILE .specs/tasks/in-progress/
+git mv .specs/tasks/todo/$TASK_FILE .specs/tasks/in-progress/
+# Fallback if git not available: mv .specs/tasks/todo/$TASK_FILE .specs/tasks/in-progress/
 ```
 
 Update `$TASK_PATH` to `.specs/tasks/in-progress/$TASK_FILE`
@@ -594,7 +595,8 @@ Confirm all Definition of Done items are marked complete in the task file.
 TASK_FILENAME=$(basename $TASK_PATH)
 
 # Move from in-progress to done
-mv .specs/tasks/in-progress/$TASK_FILENAME .specs/tasks/done/
+git mv .specs/tasks/in-progress/$TASK_FILENAME .specs/tasks/done/
+# Fallback if git not available: mv .specs/tasks/in-progress/$TASK_FILENAME .specs/tasks/done/
 ```
 
 ---
