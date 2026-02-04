@@ -67,6 +67,33 @@ Features and differences from other frameworks, plugins and agentic orcestrators
 
 ### Quick start
 
+```bash
+/plugin marketplace add NeoLabHQ/context-engineering-kit
+```
+
+Enable `sdd` plugin in marketplace
+
+```bash
+/plugin
+```
+
+Then run following commands:
+
+```bash
+# create .specs/tasks/draft/design-auth-middleware.feature.md file with initial prompt
+/add-task "Design and implement authentication middleware with JWT support"
+
+# write detailed specification for the task
+/plan
+# will move task to .specs/tasks/todo/ folder
+
+# implement the task
+/implement
+# produce working implementation of the task and move task to .specs/tasks/done/ folder
+```
+
+### Detailed guide
+
 Switch model to `sonnet[1m]` in order to keep model focused for longer time. (Important: it not means that sonnet will be used for work itself. By default `sonnet` will be used as orcestrator in order to launch `opus` agent that will perform actual work.)
 
 ```bash
@@ -94,8 +121,68 @@ Run planing process
 
 It will perform following refinement process in order to update task file with more detailed specification:
 
-```
-// TODO: add mermaid diagram of the process
+```mermaid
+flowchart TB
+    subgraph Input
+        A[📄 Draft Task File<br/>.specs/tasks/draft/*.md]
+    end
+
+    subgraph Phase2["Phase 2: Parallel Analysis"]
+        direction LR
+        B1[🔬 Research<br/>researcher · sonnet]
+        B2[📂 Codebase Analysis<br/>code-explorer · sonnet]
+        B3[💼 Business Analysis<br/>business-analyst · opus]
+        
+        J1[⚖️ Judge 2a]
+        J2[⚖️ Judge 2b]
+        J3[⚖️ Judge 2c]
+        
+        B1 --> J1
+        B2 --> J2
+        B3 --> J3
+    end
+
+    subgraph Phase3["Phase 3: Architecture Synthesis"]
+        C[🏗️ Architecture Synthesis<br/>software-architect · opus]
+        JC[⚖️ Judge 3]
+        C --> JC
+    end
+
+    subgraph Phase4["Phase 4: Decomposition"]
+        D[📋 Decomposition<br/>tech-lead · opus]
+        JD[⚖️ Judge 4]
+        D --> JD
+    end
+
+    subgraph Phase5["Phase 5: Parallelize"]
+        E[🔀 Parallelize Steps<br/>team-lead · opus]
+        JE[⚖️ Judge 5]
+        E --> JE
+    end
+
+    subgraph Phase6["Phase 6: Verifications"]
+        F[✅ Define Verifications<br/>qa-engineer · opus]
+        JF[⚖️ Judge 6]
+        F --> JF
+    end
+
+    subgraph Output
+        G[📄 Refined Task File<br/>.specs/tasks/todo/*.md]
+        H[📚 Skill File<br/>.claude/skills/*/SKILL.md]
+        I[📊 Analysis File<br/>.specs/analysis/*.md]
+    end
+
+    A --> Phase2
+    J1 & J2 & J3 --> Phase3
+    JC --> Phase4
+    JD --> Phase5
+    JE --> Phase6
+    JF --> G & H & I
+
+    style A fill:#e1f5fe
+    style G fill:#c8e6c9
+    style H fill:#c8e6c9
+    style I fill:#c8e6c9
 ```
 
 It will output updated task file to `.specs/tasks/todo/design-implement-authentication-middleware-with-jwt-support.feature.md` and create new skills if it is needed. Plus, it will produce scratchpads and verification reports along the way in order to properly thinking and evaluating each step of the process. (you can simply ignore them).
@@ -110,8 +197,66 @@ Once you are happy with specification, you can run implementation process
 
 It will perform following actions:
 
-```
-// TODO: add mermaid diagram of the process
+```mermaid
+flowchart TB
+    subgraph Phase0["Phase 0: Select Task"]
+        A[📄 Task from todo/<br/>or in-progress/]
+        A --> B[📁 Move to in-progress/]
+    end
+
+    subgraph Phase1["Phase 1: Load Task"]
+        C[📖 Parse Implementation Steps<br/>& Verification Requirements]
+    end
+
+    subgraph Phase2["Phase 2: Execute Steps"]
+        D[🔄 For Each Step]
+        
+        subgraph StepExec["Step Execution Loop"]
+            E[👨‍💻 Developer Agent<br/>Implement Step]
+            F{Verification<br/>Level?}
+            
+            G1[⏭️ None<br/>Skip Judge]
+            G2[⚖️ Single Judge<br/>threshold: 4.0]
+            G3[⚖️⚖️ Panel of 2<br/>threshold: 4.5]
+            G4[⚖️ Per-Item<br/>Parallel Judges]
+            
+            H{PASS?}
+            I[🔧 Fix & Retry<br/>with feedback]
+            J[✅ Mark Step DONE]
+        end
+        
+        D --> E
+        E --> F
+        F -->|None| G1 --> J
+        F -->|Single| G2 --> H
+        F -->|Panel| G3 --> H
+        F -->|Per-Item| G4 --> H
+        H -->|Yes| J
+        H -->|No| I --> E
+        J --> D
+    end
+
+    subgraph Phase3["Phase 3: Final Verification"]
+        K[📋 Verify Definition of Done]
+        L{All DoD<br/>PASS?}
+        M[🔧 Fix Failing Items]
+    end
+
+    subgraph Phase4["Phase 4: Complete"]
+        N[📁 Move to done/]
+        O[📊 Final Report]
+    end
+
+    Phase0 --> Phase1
+    Phase1 --> Phase2
+    Phase2 --> Phase3
+    K --> L
+    L -->|No| M --> K
+    L -->|Yes| Phase4
+
+    style A fill:#e1f5fe
+    style N fill:#c8e6c9
+    style O fill:#c8e6c9
 ```
 
 It will automatically write tests and verify them, verify build and that solution is working as expected.
@@ -125,10 +270,50 @@ Once it complete, you can use `context-engineering-kit:git` plugin in order to c
 /git:create-pr
 ```
 
-### Overral flow
+### Overall flow
 
 - `/sdd:add-task` -> produce `.specs/tasks/draft/<task-name>.<type>.md` file with initial task description.
 - `/sdd:plan` -> produce `.claude/skills/<skill-name>/SKILL.md` file with skill description and specification. And update task file with refined task description and specification, then move it to `.specs/tasks/todo/` folder.
 - `/sdd:implement` -> produce working implementation of the task and verify it, then move it to `.specs/tasks/done/` folder.
 - `/git:commit` -> commit changes
 - `/git:create-pr` -> create pull request
+
+```mermaid
+flowchart LR
+    subgraph Create["1. Create"]
+        A["/sdd:add-task"]
+    end
+
+    subgraph Plan["2. Plan"]
+        B["/sdd:plan"]
+    end
+
+    subgraph Implement["3. Implement"]
+        C["/sdd:implement"]
+    end
+
+    subgraph Ship["4. Ship"]
+        D["/git:commit"]
+        E["/git:create-pr"]
+    end
+
+    subgraph Files["Task Lifecycle"]
+        F1[📄 draft/*.md]
+        F2[📄 todo/*.md]
+        F3[📄 in-progress/*.md]
+        F4[📄 done/*.md]
+    end
+
+    A --> F1
+    F1 --> B
+    B --> F2
+    F2 --> C
+    C --> F3
+    F3 --> F4
+    F4 --> D --> E
+
+    style F1 fill:#ffecb3
+    style F2 fill:#e1f5fe
+    style F3 fill:#fff3e0
+    style F4 fill:#c8e6c9
+```
