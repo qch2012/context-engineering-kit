@@ -42,16 +42,16 @@ Parse the following arguments from `$ARGUMENTS`:
 | `task-file` | Path to task file | **Required** | Path to draft task file (e.g., `.specs/tasks/draft/add-validation.feature.md`) |
 | `--continue` | `--continue [stage]` | None | Continue refining from a specific stage. Stage is optional - resolve from context if not provided. |
 | `--target-quality` | `--target-quality X.X` | `3.5` | Target threshold value (out of 5.0) for judge pass/fail decisions. |
-| `--max-iterations` | `--max-iterations N` | `2` | Maximum implementation + judge retry cycles per phase before moving to next stage (regardless of pass/fail). |
+| `--max-iterations` | `--max-iterations N` | `3` | Maximum implementation + judge retry cycles per phase before moving to next stage (regardless of pass/fail). |
 | `--included-stages` | `--included-stages stage1,stage2,...` | All stages | Comma-separated list of stages to include. |
-| `--excluded-stages` | `--excluded-stages stage1,stage2,...` | None | Comma-separated list of stages to exclude. |
+| `--skip` | `--skip stage1,stage2,...` | None | Comma-separated list of stages to exclude. |
 | `--fast` | `--fast` | N/A | Alias for `--target-quality 3.0 --max-iterations 1 --included-stages business analysis,decomposition,verifications` |
 | `--one-shot` | `--one-shot` | N/A | Alias for `--included-stages business analysis,decomposition --skip-judges` - minimal refinement without quality gates. |
 | `--human-in-the-loop` | `--human-in-the-loop phase1,phase2,...` | None | Phases after which to pause for human verification. |
 | `--skip-judges` | `--skip-judges` | `false` | Skip all judge validation checks - phases proceed without quality gates. |
 | `--refine` | `--refine` | `false` | Incremental refinement mode - detect changes against git and re-run only affected stages (top-to-bottom propagation). |
 
-### Stage Names (for `--included-stages` / `--excluded-stages`)
+### Stage Names (for `--included-stages` / `--skip`)
 
 | Stage Name | Phase | Description |
 |------------|-------|-------------|
@@ -84,9 +84,9 @@ if --one-shot present:
 
 # Initialize defaults
 THRESHOLD ?= --target-quality || 3.5
-MAX_ITERATIONS ?= --max-iterations || 2
+MAX_ITERATIONS ?= --max-iterations || 3
 INCLUDED_STAGES ?= --included-stages || ["research", "codebase analysis", "business analysis", "architecture synthesis", "decomposition", "parallelize", "verifications"]
-EXCLUDED_STAGES = --excluded-stages || []
+SKIP_STAGES = --skip || []
 HUMAN_IN_THE_LOOP_PHASES = --human-in-the-loop || []
 SKIP_JUDGES = --skip-judges || false
 REFINE_MODE = --refine || false
@@ -96,7 +96,7 @@ if --continue [stage] present:
     CONTINUE_STAGE = stage or resolve from context
 
 # Compute final active stages
-ACTIVE_STAGES = INCLUDED_STAGES - EXCLUDED_STAGES
+ACTIVE_STAGES = INCLUDED_STAGES - SKIP_STAGES
 ```
 
 ### Context Resolution for `--continue`
@@ -317,7 +317,7 @@ Update each todo to `in_progress` when starting a phase and `completed` when jud
 - Do not mark PASS for any judge if it did not pass the rubric. Retry the judge after each implementation change till it passes the check!
 - Do not read task files in .claude or .specs directories, your job is orchestrate agents that will do the work, not do it by yourself!
 - Use `THRESHOLD` (default 3.5) for all judge pass/fail decisions, not hardcoded values!
-- Use `MAX_ITERATIONS` (default 2) for retry limits, not hardcoded values!
+- Use `MAX_ITERATIONS` (default 3) for retry limits, not hardcoded values!
 - **After `MAX_ITERATIONS` reached: PROCEED to next stage automatically - do NOT ask user unless phase is in `HUMAN_IN_THE_LOOP_PHASES`!**
 - Skip phases not in `ACTIVE_STAGES` entirely - do not launch agents for excluded stages!
 - Trigger human-in-the-loop checkpoints ONLY after phases in `HUMAN_IN_THE_LOOP_PHASES`!
@@ -1052,7 +1052,7 @@ After all executed phases and judges complete:
 | **Target Quality** | {THRESHOLD}/5.0 |
 | **Max Iterations** | {MAX_ITERATIONS} |
 | **Active Stages** | {ACTIVE_STAGES as comma-separated list} |
-| **Skipped Stages** | {EXCLUDED_STAGES or stages not in ACTIVE_STAGES} |
+| **Skipped Stages** | {SKIP_STAGES or stages not in ACTIVE_STAGES} |
 | **Human Checkpoints** | Phase {HUMAN_IN_THE_LOOP_PHASES as comma-separated} |
 | **Skip Judges** | {SKIP_JUDGES} |
 | **Refine Mode** | {REFINE_MODE} |

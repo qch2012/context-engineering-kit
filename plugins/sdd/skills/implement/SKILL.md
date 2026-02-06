@@ -31,7 +31,7 @@ Parse the following arguments from `$ARGUMENTS`:
 | `--refine` | `--refine` | `false` | Incremental refinement mode - detect changes against git and re-implement only affected steps (from modified step onwards). |
 | `--human-in-the-loop` | `--human-in-the-loop [step1,step2,...]` | None | Steps after which to pause for human verification. If no steps specified, pauses after every step. |
 | `--target-quality` | `--target-quality X.X` or `--target-quality X.X,Y.Y` | `4.0` (standard) / `4.5` (critical) | Target threshold value (out of 5.0). Single value sets both. Two comma-separated values set standard,critical. |
-| `--max-iterations` | `--max-iterations N` | `unlimited` | Maximum fix→verify cycles per step. Default is unlimited (iterate until quality met). Set to limit retries. |
+| `--max-iterations` | `--max-iterations N` | `3` | Maximum fix→verify cycles per step. Default is 3 iterations. Set to `unlimited` for no limit. |
 | `--skip-judges` | `--skip-judges` | `false` | Skip all judge validation checks - steps proceed without quality gates. |
 
 ### Configuration Resolution
@@ -54,7 +54,7 @@ else:
     THRESHOLD_FOR_CRITICAL_COMPONENTS = 4.5  # default
 
 # Initialize other defaults
-MAX_ITERATIONS = --max-iterations || null  # null = unlimited (iterate until quality met)
+MAX_ITERATIONS = --max-iterations || 3  # default is 3 iterations 
 HUMAN_IN_THE_LOOP_STEPS = --human-in-the-loop || [] (empty = none, "*" = all)
 SKIP_JUDGES = --skip-judges || false
 REFINE_MODE = --refine || false
@@ -309,8 +309,8 @@ Orchestrators who "quickly verify" = skip judge agents = quality collapse = fail
 
 - Use `THRESHOLD_FOR_STANDARD_COMPONENTS` (default 4.0) for standard steps!
 - Use `THRESHOLD_FOR_CRITICAL_COMPONENTS` (default 4.5) for steps marked as critical in task file!
-- **Iterate until quality threshold is met** - default is unlimited iterations!
-- If `MAX_ITERATIONS` is set: Stop after N iterations and proceed to next step (with warning)
+- **Default is 3 iterations** - stop after 3 fix→verify cycles and proceed to next step (with warning)!
+- If `MAX_ITERATIONS` is set to `unlimited`: Iterate until quality threshold is met (no limit)
 - Trigger human-in-the-loop checkpoints ONLY after steps in `HUMAN_IN_THE_LOOP_STEPS` (or all steps if `"*"`)!
 - **If `SKIP_JUDGES` is true: Skip ALL judge validation - proceed directly to next step after each implementation completes!**
 - **If `CONTINUE_MODE` is true: Skip to `RESUME_FROM_STEP` - do not re-implement already completed steps!**
@@ -454,7 +454,7 @@ Parse all flags from `$ARGUMENTS` and initialize configuration.
 | **Task File** | {TASK_PATH} |
 | **Standard Components Threshold** | {THRESHOLD_FOR_STANDARD_COMPONENTS}/5.0 |
 | **Critical Components Threshold** | {THRESHOLD_FOR_CRITICAL_COMPONENTS}/5.0 |
-| **Max Iterations** | {MAX_ITERATIONS or "Unlimited"} |
+| **Max Iterations** | {MAX_ITERATIONS or "3"} |
 | **Human Checkpoints** | {HUMAN_IN_THE_LOOP_STEPS as comma-separated or "All steps" or "None"} |
 | **Skip Judges** | {SKIP_JUDGES} |
 | **Continue Mode** | {CONTINUE_MODE} |
@@ -706,13 +706,13 @@ Return: scores per criterion with evidence, overall weighted score, PASS/FAIL, i
 - If critical: use `THRESHOLD_FOR_CRITICAL_COMPONENTS`
 - If standard: use `THRESHOLD_FOR_STANDARD_COMPONENTS`
 
-**6. On FAIL: Iterate Until PASS**
+**6. On FAIL: Iterate Until PASS (max 3 iterations by default)**
 
 - Present issues to implementation agent with judge feedback
 - Re-implement with judge feedback incorporated (align code with requirements, preserve user's changes if in refine mode)
 - Re-verify with judge
-- **Iterate until PASS** - continue fix → verify cycle until quality threshold is met
-- If `MAX_ITERATIONS` is set and reached:
+- **Iterate until PASS** - continue fix → verify cycle until quality threshold is met or max iterations reached
+- If `MAX_ITERATIONS` reached (default 3):
   - Log warning: "Step [N] did not pass after {MAX_ITERATIONS} iterations"
   - Proceed to next step (do not block indefinitely)
 
@@ -839,8 +839,8 @@ Return: scores with evidence, overall score, PASS/FAIL, improvements if FAIL.
 - Present failing items with judge feedback to implementation agent
 - Re-implement only failing items with feedback incorporated (preserve user's changes if in refine mode)
 - Re-verify failing items with judge
-- **Iterate until ALL PASS** - continue fix → verify cycle until all items meet quality threshold
-- If `MAX_ITERATIONS` is set and reached:
+- **Iterate until ALL PASS** - continue fix → verify cycle until all items meet quality threshold or max iterations reached
+- If `MAX_ITERATIONS` reached (default 3):
   - Log warning: "Step [N] has {X} items that did not pass after {MAX_ITERATIONS} iterations"
   - Proceed to next step (do not block indefinitely)
 
@@ -1070,7 +1070,7 @@ After all steps complete and DoD verification passes:
 |---------|-------|
 | **Standard Components Threshold** | {THRESHOLD_FOR_STANDARD_COMPONENTS}/5.0 |
 | **Critical Components Threshold** | {THRESHOLD_FOR_CRITICAL_COMPONENTS}/5.0 |
-| **Max Iterations** | {MAX_ITERATIONS or "Unlimited"} |
+| **Max Iterations** | {MAX_ITERATIONS or "3"} |
 | **Human Checkpoints** | {HUMAN_IN_THE_LOOP_STEPS or "None"} |
 | **Skip Judges** | {SKIP_JUDGES} |
 | **Continue Mode** | {CONTINUE_MODE} |
@@ -1086,7 +1086,7 @@ After all steps complete and DoD verification passes:
 | 4    | [Title] | ✅ | Single | 4.2/5 | 3 | ✅ |
 
 **Legend:**
-- ✅ PASS - Score >= threshold for step type (iterated until met)
+- ✅ PASS - Score >= threshold for step type
 - ⚠️ MAX_ITER - Did not pass but MAX_ITERATIONS reached, proceeded anyway
 - ⏭️ SKIPPED - Step skipped (continue/refine mode)
 
@@ -1248,8 +1248,8 @@ After all steps complete and DoD verification passes:
 # Lower quality threshold for both (faster convergence)
 /implement add-validation.feature.md --target-quality 3.5
 
-# Limit iterations (default is unlimited)
-/implement add-validation.feature.md --max-iterations 3
+# Unlimited iterations (default is 3)
+/implement add-validation.feature.md --max-iterations unlimited
 
 # Skip all judge verifications (fast but no quality gates)
 /implement add-validation.feature.md --skip-judges
@@ -1585,7 +1585,7 @@ Before completing implementation:
 - [ ] Parsed all flags from `$ARGUMENTS` correctly
 - [ ] Used `THRESHOLD_FOR_STANDARD_COMPONENTS` for standard steps
 - [ ] Used `THRESHOLD_FOR_CRITICAL_COMPONENTS` for critical steps
-- [ ] Iterated until quality threshold met (or `MAX_ITERATIONS` if set)
+- [ ] Iterated until quality threshold met (or `MAX_ITERATIONS` reached, default 3)
 - [ ] Triggered human-in-the-loop checkpoints ONLY for steps in `HUMAN_IN_THE_LOOP_STEPS`
 - [ ] If `SKIP_JUDGES` is true: Skipped ALL judge validation
 - [ ] If `CONTINUE_MODE` is true: Verified last step and resumed correctly
