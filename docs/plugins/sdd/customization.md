@@ -1,27 +1,29 @@
 # Customization
 
-Features and differences from other frameworks, plugins and agentic orcestrators.
+Customization options available for the SDD plugin.
 
-## Token usage and Efficiency
+## Token Usage and Efficiency
 
-Main limitation of this workflow is amount of tokens that you willing to spend on each task.
+The main limitation of SDD plugin is the number of tokens you're willing to spend on each task.
 
-In contradition to other plugins in context-engineering-kit marketplace, this plugin tries to use as much tokens as possible in order to get best results. Such approach can eat all claude code session token for a single task, this is why it have default limits like `target-quality` and `max-iterations` set per each command. They are predefined in a way that if task defined well enough and not too big, in majority of the cases results will be so good, that you not will be need to re-iterate on it.
+In contrast to other plugins in the context-engineering-kit marketplace, this plugin tries to use as many tokens as possible to get the best results. This approach can consume an entire Claude Code session's token budget on a single task, which is why it has default limits like `target-quality` and `max-iterations` set per command. These are predefined in a way that if a task is well-defined and not too big, in majority of the cases results will be good enough, that you not will be need to re-iterate on it.
 
-But if you want to get better results or make task done faster, you can adjust parameters of the commands. For example by adding params like `--target-quality 4.5 --max-iterations 5` to `/plan` or `/implement` command will allow orcestrator agent to iterate more in order to get close to "ideal" results. On the other hand you can set them to `--target-quality 3.0 --max-iterations 1`. This way agents will finish their work when quality of results at least minimally meets the criteria, and if not, it will iterate just once to resolve the issues. This way you can configure each command to balance between quality and speed per task run.
+If you want better results or want to finish tasks faster, you can adjust command parameters. For example, adding `--target-quality 4.5 --max-iterations 5` to `/plan` or `/implement` allows the orchestrator agent to iterate more toward "ideal" results. Conversely, setting `--target-quality 3.0 --max-iterations 1` makes agents finish when results minimally meet the criteria, iterating only once to resolve issues. This lets you configure each command to balance quality and speed per task run.
 
-If you want just get results as fast as framework can produce them, you can use `--fast` preset in `/plan` command. It will limit amount of steps, decrease target quality and amount of refinement iterations all together. Decreasing quality even more, probably not will be worth it.
+If you just want results as fast as the framework can produce them, use the `--fast` preset in the `/plan` command. It limits the number of steps and decreases both target quality and refinement iterations altogether.
 
-But on the other hand, if you know that you not need some steps in order to get task done, you can use `--skip` parameter in `/plan` command to skip them. For example, if you know that you not need to make any documentation research, you can write `--skip research`, which will skip research phase entaerly. Or if you know that you not need to parallaize your task implementation, you can write `--skip parallelize`.
+If you know certain steps aren't needed for your task, you can use the `--skip` parameter in the `/plan` command. For example, `--skip research` skips the research phase entirely, and `--skip parallelize` skips task parallelization.
 
-As last, but not least, you can ask orcestrator to use only `haiku` model for all agents. It can sound not so relaible, but MAKER paper research have found that if you parallel all work for multiple smaller models, 3-10 per task, you can expect to get results that can be as good as bigger models. This approach not was tested or supported in this plugin yet, but it still can be working. You can try to combine `haiku` with bigger amount of `max-iterations` and `target-quality` to get results faster, but still with acceptable quality.
+Last but not least, you can ask the orchestrator to use only the `haiku` model for all agents. While this may sound unreliable, the MAKER paper found that parallelizing work across multiple smaller models (3–10 per task) can yield results comparable to larger models. This approach hasn't been tested or officially supported in this plugin yet, but it may still work. You can try combining `haiku` with higher `max-iterations` and `target-quality` values to get faster results with acceptable quality.
 
-## Human-in-the-loop verification
+## Human-in-the-Loop Verification
 
-Initial version of this plugin was designed to produce highest possible quality of solution that LLM model can produce, or in another terms move LLM real world usage closer to benchmarks that it was able to achieve. But in real life scenario LLMs tend to move towards sub-optimal solutions, which is not what we usally want to achieve. Current version of plugin was able to filter out all not working solutions, and obviusly incorrect. But overall quality of solution still depends on quality of speficiation file and as a result on quality of review that you make for speficiation.
+The initial version of this plugin was designed to produce the highest possible quality solution an LLM can generate — in other words, to move real-world LLM performance closer to benchmark results. However, in practice, LLMs tend to drift toward sub-optimal solutions, which is not the desired outcome. The current version filters out all non-working and obviously incorrect solutions. That said, the overall quality still depends on the quality of the specification file and, consequently, on the quality of your review of that specification.
 
-## Epics, User Stories and Roadmaps
+In order to incorporate human feedback into the process, you can use the `--human-in-the-loop` parameter in the `/plan` and `/implement` commands. It will pause the process after each phase and ask you to review the results of last phase, before continuing to the next one.
 
-This plugin follows princeple of KISS (Keep It Simple Stupid) to avoid adding unnecessary complexity. So it not yet support epics and roadmaps, because it currently problematic to keep model focused on such long term activities out of the box. But it already possible to reach simular results by using `/add-task` command with specifying dependencies between tasks. This way you can produce naturally hierarchial structure of tasks that builds into roadmap.
+## Epics, User Stories, and Roadmaps
 
-On top of that you can manage and define own process to organaize tasks that more suitable for you and your team. You can write own prompts that will collect tasks into epics or decompose existing epics into multiple smaller tasks.
+This plugin follows the KISS principle (Keep It Simple, Stupid) to avoid unnecessary complexity. It doesn't yet support epics and roadmaps, because it's currently difficult to keep the model focused on such long-term activities out of the box. However, you can achieve similar results by using the `/add-task` command with dependencies between tasks. This naturally produces a hierarchical structure of tasks that builds into a roadmap.
+
+On top of that, you can define your own process to organize tasks in whatever way suits you and your team. You can write custom prompts that collect tasks into epics or decompose existing epics into multiple smaller tasks.

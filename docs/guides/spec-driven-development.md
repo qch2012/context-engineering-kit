@@ -1,6 +1,6 @@
 # Reliable Engineering through Spec-Driven Development (SDD)
 
-Structured workflow for features and bugs requiring planning, specifications, and architecture decisions before implementation. Mainly based around of [SDD](../plugins/sdd/README.md) plugin.
+Structured workflow for features and bugs requiring planning, specifications, and architecture decisions before implementation. Mainly based on the [SDD](../plugins/sdd/README.md) plugin.
 
 For simple features, use [Feature Development with Quality Gates](./feature-development.md) workflow.
 
@@ -9,7 +9,7 @@ For simple features, use [Feature Development with Quality Gates](./feature-deve
 - Features requiring complex development
 - Significant architectural changes or integrations
 
-## Plugins needed for this workflow
+## Required Plugins
 
 - [SDD](../plugins/sdd/README.md)
 - [Git](../plugins/git/README.md)
@@ -18,15 +18,15 @@ For simple features, use [Feature Development with Quality Gates](./feature-deve
 
 ### Specification Creation
 
-Optional, but highly recommended to switch model to `sonnet[1m]` in order to keep model focused for longer time.
+Optional, but highly recommended to switch the model to `sonnet[1m]` to keep it focused for a longer time.
 
-Important: it not means that sonnet will be used for work itself. By default `sonnet` will be used as orcestrator in order to launch `opus` agents that will perform actual work.
+Important: this does not mean that Sonnet will be used for the work itself. By default, `sonnet` is used as the orchestrator to launch `opus` agents that perform the actual work.
 
 ```bash
 /model sonnet[1m]
 ```
 
-Create tasks file with initial prompt
+Create a task file with the initial prompt:
 
 ```bash
 /add-task "Design and implement authentication middleware with JWT support"
@@ -37,15 +37,15 @@ Create tasks file with initial prompt
 # Depends on: None
 ```
 
-You can adjust task file to incorrporate additional details and creiterias at this moment. But it is not required.
+You can adjust the task file to incorporate additional details and criteria at this point, but it is not required.
 
-Run planing process
+Run the planning process:
 
 ```bash
 /plan 
 ```
 
-It will perform following refinement process in order to update task file with more detailed specification:
+It will perform the following refinement process to update the task file with a more detailed specification:
 
 ```mermaid
 flowchart TB
@@ -111,19 +111,19 @@ flowchart TB
     style I fill:#c8e6c9
 ```
 
-It will output updated task file to `.specs/tasks/todo/design-implement-authentication-middleware-with-jwt-support.feature.md` and create new skills if it is needed. Plus, it will produce scratchpads and verification reports along the way in order to properly think and evaluate each step of the process. You can simply ignore all of them.
+It will output the updated task file to `.specs/tasks/todo/design-implement-authentication-middleware-with-jwt-support.feature.md` and create new skills if needed. It also produces scratchpads and verification reports along the way to properly evaluate each step of the process. You can safely ignore all of them.
 
-At this moment you can verify specification and adjust, and then run `/plan --refine` command again in order for agents to update rest of the specification if it not aligned with your changes. It uses top-to-bottom approach to update specification, which means that all sections below your changes will be rethinked and updated accordingly.
+At this point you can verify and adjust the specification, then run the `/plan --refine` command again for agents to update the rest of the specification where it doesn't align with your changes. It uses a top-to-bottom approach, meaning all sections below your changes will be rethought and updated accordingly.
 
 ### Code Generation
 
-Once you are happy with specification, you can run implementation process
+Once you are happy with the specification, you can run the implementation process:
 
 ```bash
 /implement
 ```
 
-It will perform following actions:
+It will perform the following actions:
 
 ```mermaid
 flowchart TB
@@ -187,13 +187,13 @@ flowchart TB
     style O fill:#c8e6c9
 ```
 
-It will automatically write tests and verify them, build and verify that solution is working as expected.
+It will automatically write tests, verify them, build the solution, and confirm it works as expected.
 
-Once implementation is complete, you can check it and adjust, then run `/implement --refine` command again in order to agent to update rest of the implementation if it not aligned with your cahgnes or feedback.
+Once implementation is complete, you can review and adjust it, then run `/implement --refine` again for the agent to update the rest of the implementation if it doesn't align with your changes or feedback.
 
 ### Commit and Push
 
-Once it complete, you can use [git](../git) plugin in order to commit changes and create pull request.
+Once complete, you can use the [git](../plugins/git) plugin to commit changes and create a pull request.
 
 ```bash
 /git:commit

@@ -2,19 +2,19 @@
 
 Comprehensive specification-driven development workflow plugin that transforms prompts into production-ready implementations through structured planning, architecture design, and quality-gated execution.
 
-This pluging is designed to consistently and reproducably produce working code. It was tested on real life production projects by our team and in 100% cases it was able to generate working code aligned with initial prompt. So, if you was able to get use case that it was not able to handle, please report it as an issue.
+This plugin is designed to consistently and reproducibly produce working code. It was tested on real-life production projects by our team, and in 100% of cases it generated working code aligned with the initial prompt. If you find a use case it cannot handle, please report it as an issue.
 
 ## Key Features
 
-- Development as compilation - Plugin designed to work as "compilation" or "night build" for your development process: `task specs -> run /sdd:implement -> working code`. After writing prompt you can let plugin work and expect, that when you return you will have working result. But the amount of time it will spend depends on task complexity, for simple tasks it can work for 30 minutes, for complex tasks it can work few days.
-- Quality of benchmarks in real live - Models benchmarks increase with each release, while real world results usally quite the same. It is caused by fact that in becnhmarks we see best possible results that model was able to achive, but in real world scenarios LLMs tend to move towards sub-optimal solutions, which can be wrong or fully not working. Plugin uses variaty of patterns in order to improve results and force model to work at it's peak performance.
-- Customaizable - plugin allow to balance between quality of results and speed of the process, by adjusting various parameters of the commands. Learn more about it in [Advanced usage](./advanced-usage) section.
-- Developer time-efficient - Overral process is designed to spend as less developer time as possible, and reduce amount of interattions. But still allow to produce results that better than model can generate from scratch, based on amount of time that developer willing to spend on iterating with it and refining specification.
-- Industry-standard - Plugin specfication template based on arc42 specification adjusted for LLM capabilities. It is high quality standard for software development documentation, that is used by many companies and organizations.
-- Work best in complex or big codebases -While majority of other frameworks, work best for new projects and greenfield development. This plugin designed to work better the more code you already have and the better structured architecture of your solution. At each planing phase it have **codebase impact analysis** step, that evaluate which exact files can be affected by your task and what patterns better to follow in order to achive desired result.
-- Simple - This plugin avoid unnecesary complexity and mainly uses just 3 commands, which moves development process complexity to model, by utilizing multi-agent orcestration. In workflow `/sdd:implement` is single command that produce working code based on task specification. But, in order to produce task specification that can work as a basis for implementation, you need to run `/sdd:add-task` and `/sdd:plan` commands, that will analyse your prompt and iteratevly refine specification untill it meets required quality.
+- **Development as compilation** — The plugin works like a "compilation" or "nightly build" for your development process: `task specs → run /sdd:implement → working code`. After writing your prompt, you can launch the plugin and expect a working result when you come back. The time it takes depends on task complexity — simple tasks may finish in 30 minutes, while complex ones can take a few days.
+- **Benchmark-level quality in real life** — Model benchmarks improve with each release, yet real-world results usually stay the same. That's because benchmarks reflect the best possible output a model can achieve, whereas in practice LLMs tend to drift toward sub-optimal solutions that can be wrong or non-functional. This plugin uses a variety of patterns to keep the model working at its peak performance.
+- **Customizable** — Balance between result quality and process speed by adjusting command parameters. Learn more in the [Customization](./customization.md) section.
+- **Developer time-efficient** — The overall process is designed to minimize developer time and reduce the number of interactions, while still producing results better than what a model can generate from scratch. But overral quality is highly proportional to the time you invest in iterating and refining the specification.
+- **Industry-standard** — The plugin's specification template is based on the arc42 standard, adjusted for LLM capabilities. Arc42 is a widely adopted, high-quality standard for software development documentation used by many companies and organizations.
+- **Works best in complex or large codebases** — While most other frameworks work best for new projects and greenfield development, this plugin is designed to improve the more existing code and well-structured architecture you have. At each planning phase it includes a **codebase impact analysis** step that evaluates which files may be affected and which patterns to follow to achieve the desired result.
+- **Simple** — This plugin avoids unnecessary complexity and mainly uses just 3 commands, offloading process complexity to the model via multi-agent orchestration. `/sdd:implement` is a single command that produces working code from a task specification. To create that specification, you run `/sdd:add-task` and `/sdd:plan`, which analyze your prompt and iteratively refine the specification until it meets the required quality.
 
-## Quick start
+## Quick Start
 
 ```bash
 /plugin marketplace add NeoLabHQ/context-engineering-kit
@@ -27,7 +27,7 @@ Enable `sdd` plugin in installed plugins list
 # Installed -> sdd -> Space to enable
 ```
 
-Then run following commands:
+Then run the following commands:
 
 ```bash
 # create .specs/tasks/draft/design-auth-middleware.feature.md file with initial prompt
@@ -38,26 +38,26 @@ Then run following commands:
 # will move task to .specs/tasks/todo/ folder
 ```
 
-Restart Claude Code session to clear context and start fresh. Then run following command:
+Restart the Claude Code session to clear context and start fresh. Then run the following command:
 
 ```bash
 # implement the task
 /sdd:implement @.specs/tasks/todo/design-auth-middleware.feature.md
-# produce working implementation of the task and move task to .specs/tasks/done/ folder
+# produces working implementation and moves the task to .specs/tasks/done/ folder
 ```
 
 - [Detailed guide](../../guides/spec-driven-development.md)
 - [Usage Examples](./usage-examples.md)
 
-## Overall flow
+## Overall Flow
 
-Flow of the task implementation process from scratch till PR, including commands from [git](../git) plugin:
+End-to-end task implementation process from initial prompt to pull request, including commands from the [git](../git) plugin:
 
-- `/sdd:add-task` -> produce `.specs/tasks/draft/<task-name>.<type>.md` file with initial task description.
-- `/sdd:plan` -> produce `.claude/skills/<skill-name>/SKILL.md` file with skill that can be need in order to implement the task, by analyzing libraries and frameworks documenation that are used in the codebase. Then it will update task file with refined task description and specification, and move it to `.specs/tasks/todo/` folder.
-- `/sdd:implement` -> produce working implementation of the task and verify it, then move task to `.specs/tasks/done/` folder.
-- `/git:commit` -> commit changes
-- `/git:create-pr` -> create pull request
+- `/sdd:add-task` → creates a `.specs/tasks/draft/<task-name>.<type>.md` file with the initial task description.
+- `/sdd:plan` → generates a `.claude/skills/<skill-name>/SKILL.md` file with skills needed to implement the task (by analyzing library and framework documentation used in the codebase), then updates the task file with a refined specification and moves it to `.specs/tasks/todo/`.
+- `/sdd:implement` → produces a working implementation, verifies it, then moves the task to `.specs/tasks/done/`.
+- `/git:commit` → commits changes.
+- `/git:create-pr` → creates a pull request.
 
 ```mermaid
 flowchart LR
@@ -107,10 +107,10 @@ Core workflow commands:
 - [/sdd:plan](./plan.md) - Analyze prompt, generate required skills and refine task specification
 - [/sdd:implement](./implement.md) - Produce working implementation of the task and verify it
 
-Additional commands that can be useful before creating task:
+Additional commands useful before creating a task:
 
-- [/sdd:create-ideas](./create-ideas.md) - Generate diverse ideas on given topic using creative sampling technique.
-- [/sdd:brainstorm](./brainstorm.md) - Refine vague ideas into fully-formed designs through collaborative dialogue.
+- [/sdd:create-ideas](./create-ideas.md) - Generate diverse ideas on a given topic using creative sampling techniques
+- [/sdd:brainstorm](./brainstorm.md) - Refine vague ideas into fully-formed designs through collaborative dialogue
 
 ## Available Agents
 
@@ -129,26 +129,26 @@ The SDD plugin uses specialized agents for different phases of development:
 
 ## Patterns
 
-Main patterns that implemented in this plugin:
+Key patterns implemented in this plugin:
 
-- Structured reasoning templates, that include: Zero-shot and Few-shot Chain of Thought, Tree of Thoughts, Problem Decomposition and Self-Critique. Each tailored for specific agent and task that they perform. That allowed agents to perfrom complex task decomposition enough, that isolated sub-agents will be able to implement each step.
-- Multi-agent orcestration for context managment. Context isolation of independent agents, allow to prevent context rot problem, esentailly using LLMs at optimal performance at each step of the process. This is why main agent used as orcestrator to launch sub-agents and control their work.
-- Quality gates based on LLM-as-Judge, that are used to evaluate the quality of each planing and implementation step using evidence-based scoring and predefined verification rubrics. This allowed to fully iluminate cases when agent produced solutions that are not working or incorrect.
-- Continuous learning agent pattern used in order to build skills that agent will need in order to implement specific task, which they not will be able to perform from scratch.
-- Spec-driven development pattern based on arc42 specification standard adjusted for LLM capabilities, in order to eleminate parts of the specification that not bring any value for implemenation quality or even can degrade it.
-- MAKER - This agent relaibility pattern was introduced in [Solving a Million-Step LLM Task with Zero Errors](https://arxiv.org/abs/2511.09030) paper. It allow to remove agents mistakes caused by accumulated context and hallucinations, by utilizing constant clean state agents launch, memory storage based on filesystem and multi-agent voting during critical decision making.
+- **Structured reasoning templates** — includes Zero-shot and Few-shot Chain of Thought, Tree of Thoughts, Problem Decomposition, and Self-Critique. Each is tailored to a specific agent and task, enabling sufficiently detailed decomposition so that isolated sub-agents can implement each step independently.
+- **Multi-agent orchestration for context management** — Context isolation of independent agents prevents the context rot problem, essentially keeping LLMs at optimal performance at each step of the process. The main agent acts as an orchestrator that launches sub-agents and controls their work.
+- **Quality gates based on LLM-as-Judge** — Evaluate the quality of each planning and implementation step using evidence-based scoring and predefined verification rubrics. This fully eliminates cases where an agent produces non-working or incorrect solutions.
+- **Continuous learning** — Builds skills that the agent needs to implement a specific task, which it would otherwise not be able to perform from scratch.
+- **Spec-driven development pattern** — Based on the arc42 specification standard, adjusted for LLM capabilities, to eliminate parts of the specification that add no value to implementation quality or that could degrade it.
+- **MAKER** — An agent reliability pattern introduced in [Solving a Million-Step LLM Task with Zero Errors](https://arxiv.org/abs/2511.09030). It removes agent mistakes caused by accumulated context and hallucinations by utilizing clean-state agent launches, filesystem-based memory storage, and multi-agent voting during critical decision-making.
 
-## Vibe coding VS Specification-Driven Development
+## Vibe Coding vs. Specification-Driven Development
 
-This plugin is not "vibe" coding solution, but from the scratch it works as it. By default it is designed to work from single prompt till the end of the task, through making reasonable assumptions, and evidence based decisions, instead of constantly asking user for clarification. It is done because developer time is more valuable than model time. So it will allways produce working results, but quality of it will be sub-optimal if no human feedback is provided.
+This plugin is not a "vibe coding" solution, but out of the box it works like one. By default it is designed to work from a single prompt through to the end of the task, making reasonable assumptions and evidence-based decisions instead of constantly asking for clarification. This is caused by fact that developer time is more valuable than model time, so it allow developer to decide how much time task is worth to spend. Plugin will always produce working results, but quality will be sub-optimal if no human feedback is provided.
 
-To do so, after generating specification you can correct it or left comments using `//` and then running `/plan` command again with `--refine` flag. You also can make verifications after each planinig and implementation phase, by adding `--human-in-the-loop` flag. By majority of known researches human feedback is most effective way to improve results.
+To improve quality, after generating a specification you can correct it or leave comments using `//`, then run the `/plan` command again with the `--refine` flag. You can also verify each planning and implementation phase by adding the `--human-in-the-loop` flag. According to the majority of known research, human feedback is the most effective way to improve results.
 
-On the other hand, our tests showed that even if speicifcation that was generated initially wasn't correct due to lack of information or complexity of the task. Agent still was able to correct itself till it reached working solution. But usally it was working much longer, spending time on wrong paths, and stoping more frequiently. To avoid such cases we strongly advice to decompose task into smaller separate tasks with dependencies and review specification for each of them. You can add dependencies between tasks by adding them as arguments to `/add-task` command and model will link them together, by adding `depends_on` section to task file frontmatter.
+Our tests showed that even when the initially generated specification was incorrect due to lack of information or task complexity, the agent was still able to self-correct until it reached a working solution. However, it usually took much longer, spending time on wrong paths and stopping more frequently. To avoid this, we strongly advise decomposing tasks into smaller separate tasks with dependencies and reviewing the specification for each one. You can add dependencies between tasks as arguments to the `/add-task` command, and the model will link them together by adding a `depends_on` section to the task file frontmatter.
 
-Even if you not want spend to much time on this process, you still can use plugin even for complex tasks, without any decomposition and human verification, but you probably will be need to use tools like ralp-loop in order to keep agent running for longer time.
+Even if you don't want to spend much time on this process, you can still use the plugin for complex tasks without decomposition or human verification — but you will likely need tools like ralph-loop to keep the agent running for a longer time.
 
-Learn more about avaiable customization options in [Customization](./customization.md).
+Learn more about available customization options in [Customization](./customization.md).
 
 ## Theoretical Foundation
 
@@ -168,7 +168,7 @@ The SDD plugin is based on established software engineering methodologies and re
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) - Separation of concerns and dependency inversion
 - [Vertical Slice Architecture](https://jimmybogard.com/vertical-slice-architecture/) - Feature-based organization for incremental delivery
 - [Verbalized Sampling](https://arxiv.org/abs/2510.01171) - Training-free prompting strategy for diverse idea generation. Achieves **2-3x diversity improvement** while maintaining quality. Used for `create-ideas`, `brainstorm` and `plan` commands
-- [Solving a Million-Step LLM Task with Zero Errors](https://arxiv.org/abs/2511.09030) - Reliability pattern for LLM-based agents that allows to solve complex tasks with zero errors.
+- [Solving a Million-Step LLM Task with Zero Errors](https://arxiv.org/abs/2511.09030) - Reliability pattern for LLM-based agents that enables solving complex tasks with zero errors.
 - [LLM-as-a-Judge](https://arxiv.org/abs/2306.05685) - Evaluation patterns
 - [Multi-Agent Debate](https://arxiv.org/abs/2305.14325) - Multiple perspectives
 - [Chain-of-Verification](https://arxiv.org/abs/2309.11495) - Hallucination reduction
