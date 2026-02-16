@@ -1,46 +1,85 @@
 # Git Plugin
 
-Commands for streamlined Git operations including commits and pull request creation with conventional commit messages.
+Git workflows for commits, pull requests, issue analysis, reviews, and worktrees.
+
+This plugin now supports both:
+- Claude Code command-style usage (`/git:*`)
+- Codex skill-style usage (`codex/skills/git-*`)
 
 ## Plugin Target
 
-- Maintain consistent commit history - Every commit follows conventional commit format
-- Reduce PR creation friction - Automated formatting, templates, and linking
-- Improve issue-to-code workflow - Clear technical specs from issue descriptions
-- Ensure team consistency - Standardized Git operations across the team
+- Maintain consistent commit history with conventional commits
+- Reduce PR creation friction with standardized guidance
+- Improve issue-to-code workflow with structured analysis
+- Standardize team Git operations
 
 ## Overview
 
-The Git plugin provides commands that automate and standardize Git workflows, ensuring consistent commit messages, proper PR formatting, and efficient issue management. It integrates GitHub best practices and conventional commits with emoji.
+The Git plugin provides reusable workflows for:
+- commit creation
+- PR creation and review comments
+- issue loading and analysis
+- multi-worktree development
+- git notes metadata
 
-Most commands require GitHub CLI (`gh`) for full functionality including creating PRs, loading issues, and setting labels/reviewers.
+Most GitHub-related flows require GitHub CLI (`gh`).
 
-## Quick Start
+## Claude Code Usage
+
+### Install (Claude plugin)
 
 ```bash
-# Install the plugin
 /plugin install git@NeoLabHQ/context-engineering-kit
-
-# Create a well-formatted commit
-> /git:commit
-
-# Create a pull request
-> /git:create-pr
 ```
 
-#### Analyze Open GitHub issues
+### Quick Start (Claude commands)
 
 ```bash
-# Load all open issues
-> /git:load-issues
-
-# Analyze a GitHub issue
-> /git:analyze-issue 123
+/git:commit
+/git:create-pr
+/git:load-issues
+/git:analyze-issue 123
 ```
 
-[Usage Examples](./usage-examples.md)
+## Codex Skills Usage
 
-## Commands
+### Install (Codex skills)
+
+From this plugin directory (`plugins/git`), install all git skills into your personal Codex skills directory:
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R codex/skills/git-* ~/.codex/skills/
+```
+
+Verify install:
+
+```bash
+find ~/.codex/skills -maxdepth 2 -name SKILL.md | rg 'git-'
+```
+
+### Quick Start (Codex)
+
+Use the skill names directly in Codex prompts:
+- `git-commit`
+- `git-create-pr`
+- `git-analyze-issue`
+- `git-load-issues`
+- `git-attach-review-to-pr`
+- `git-create-worktree`
+- `git-merge-worktree`
+- `git-compare-worktrees`
+- `git-notes`
+- `git-worktrees`
+
+Examples:
+- "Use `git-commit` to create a conventional commit for my staged changes."
+- "Use `git-create-pr` to prepare a draft PR from this branch."
+- "Use `git-compare-worktrees` to compare `src/` between my current branch and `feature/auth-system`."
+
+Note: Skill descriptions include alias text like `$git:<name>`, while file/folder skill IDs are `git-<name>`.
+
+## Command Docs (Claude)
 
 - [/git:commit](./commit.md) - Create well-formatted commits with conventional commit messages and emoji.
 - [/git:create-pr](./create-pr.md) - Create pull requests using GitHub CLI with proper templates and formatting.
@@ -51,8 +90,9 @@ Most commands require GitHub CLI (`gh`) for full functionality including creatin
 - [/git:compare-worktrees](./compare-worktrees.md) - Compare files and directories between git worktrees or worktree and current branch.
 - [/git:merge-worktree](./merge-worktree.md) - Merge changes from worktrees into current branch with selective file checkout, cherry-picking, interactive patch selection, or manual merge.
 
-## Skills
+## Knowledge Skills
 
-- [worktrees](./worktrees.md) - Skill for Parallel Branch Development in same file system using git worktrees.
-- [notes](./notes.md) - Skill about using git notes to add metadata to commits without changing history.
+- [worktrees](./worktrees.md) - Patterns for parallel branch development with git worktrees.
+- [notes](./notes.md) - Patterns for attaching metadata to commits with git notes.
 
+[Usage Examples](./usage-examples.md)
