@@ -145,3 +145,4 @@ vite.config.ts.timestamp-*
 .specs/scratchpads/
 .specs/reports/
 .specs/scratchpad/
+plugins/sdd/convert-sdd-to-codex.md
