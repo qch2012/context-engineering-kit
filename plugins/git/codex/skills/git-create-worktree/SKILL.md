@@ -14,7 +14,7 @@ CRITICAL: Perform the following steps exactly as described:
 
 1. **Current state check**: Run `git worktree list` to show existing worktrees and `git status` to verify the repository state is clean (no uncommitted changes that might cause issues)
 
-2. **Fetch latest remote branches**: Run `git fetch orgin main` to ensure local has knowledge of remote main branches
+2. **Fetch latest remote branches**: Run `git fetch --all` to ensure local has knowledge of all remote branches
 
 3. **Parse user input**: Determine what the user wants to create:
    - `<name>`: Create worktree with auto-detected type prefix
