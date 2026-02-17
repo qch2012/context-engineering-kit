@@ -14,7 +14,7 @@ This plugin is designed to consistently and reproducibly produce working code. I
 - **Works best in complex or large codebases** — While most other frameworks work best for new projects and greenfield development, this plugin is designed to perform better the more existing code and well-structured architecture you have. At each planning phase it includes a **codebase impact analysis** step that evaluates which files may be affected and which patterns to follow to achieve the desired result.
 - **Simple** — This plugin avoids unnecessary complexity and mainly uses just 3 commands, offloading process complexity to the model via multi-agent orchestration. `/sdd:implement` is a single command that produces working code from a task specification. To create that specification, you run `/sdd:add-task` and `/sdd:plan`, which analyze your prompt and iteratively refine the specification until it meets the required quality.
 
-## Quick Start
+## Quick Start (Claude Code)
 
 ```bash
 /plugin marketplace add NeoLabHQ/context-engineering-kit
@@ -49,6 +49,35 @@ Restart the Claude Code session to clear context and start fresh. Then run the f
 - [Detailed guide](../../guides/spec-driven-development.md)
 - [Usage Examples](usage-examples.md)
 
+## Quick Start (Codex)
+
+Install SDD skills from this repository into your local Codex skills directory:
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R plugins/sdd/codex/skills/sdd-* ~/.codex/skills/
+```
+
+Verify the install:
+
+```bash
+find ~/.codex/skills -maxdepth 2 -name SKILL.md | rg 'sdd-'
+```
+
+Then use the same workflow with Codex skill IDs:
+
+```text
+sdd-add-task -> sdd-plan -> sdd-implement
+```
+
+Example prompt sequence:
+
+1. `Use sdd-add-task with: "Design and implement authentication middleware with JWT support"`
+2. `Use sdd-plan on .specs/tasks/draft/design-auth-middleware.feature.md`
+3. `Use sdd-implement on .specs/tasks/todo/design-auth-middleware.feature.md`
+
+Note: skill descriptions include alias text like `$sdd:add-task`, while Codex skill IDs are folder names like `sdd-add-task`.
+
 ## Overall Flow
 
 End-to-end task implementation process from initial prompt to pull request, including commands from the [git](../git/README.md) plugin:
@@ -58,6 +87,13 @@ End-to-end task implementation process from initial prompt to pull request, incl
 - `/sdd:implement` → produces a working implementation, verifies it, then moves the task to `.specs/tasks/done/`.
 - `/git:commit` → commits changes.
 - `/git:create-pr` → creates a pull request.
+
+Codex equivalent flow uses:
+
+- `sdd-add-task` → creates `.specs/tasks/draft/<task-name>.<type>.md`
+- `sdd-plan` → refines the spec and moves task to `.specs/tasks/todo/`
+- `sdd-implement` → executes implementation and moves task to `.specs/tasks/done/`
+- `git-commit` and `git-create-pr` for shipping steps
 
 ```
   1. Create        2. Plan         3. Implement           4. Ship
