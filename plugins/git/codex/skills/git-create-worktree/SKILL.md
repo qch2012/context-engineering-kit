@@ -3,7 +3,6 @@ name: git-create-worktree
 description: "Create and setup git worktrees for parallel development with automatic dependency installation Argument hint: <name> (e.g., \"refactor auth system\" or \"fix login\") or --list to show existing worktrees. Also invoked as $git:create-worktree."
 ---
 
-
 # Claude Command: Create Worktree
 
 Your job is to create and setup git worktrees for parallel development, with automatic detection and installation of project dependencies.
@@ -14,7 +13,7 @@ CRITICAL: Perform the following steps exactly as described:
 
 1. **Current state check**: Run `git worktree list` to show existing worktrees and `git status` to verify the repository state is clean (no uncommitted changes that might cause issues)
 
-2. **Fetch latest remote branches**: Run `git fetch --all` to ensure local has knowledge of all remote branches
+2. **Fetch latest remote branches**: Run `git fetch origin main` or `git fetch origin master` to ensure local has knowledge of  remote main branches
 
 3. **Parse user input**: Determine what the user wants to create:
    - `<name>`: Create worktree with auto-detected type prefix
@@ -38,14 +37,13 @@ CRITICAL: Perform the following steps exactly as described:
       - `<prefix>/<normalized-name>` (e.g., `feature/auth-system`)
 
    b. **Branch resolution**: Determine if the branch exists locally, remotely, or needs to be created:
-      - If branch exists locally: `git worktree add ../<project>-<name> <branch>`
-      - If branch exists remotely (origin/<branch>): `git worktree add --track -b <branch> ../<project>-<name> origin/<branch>`
-      - If branch doesn't exist: Ask user for base branch (default: current branch or main/master), then `git worktree add -b <branch> ../<project>-<name> <base>`
+      - If branch exists locally: `git worktree add worktree/<name> <branch>`
+      - If branch exists remotely (origin/<branch>): `git worktree add --track -b <branch> worktree/<name> origin/<branch>`
+      - If branch doesn't exist: Ask user for base branch (default: current branch or main/master), then `git worktree add -b <branch> worktree/<name> <base>`
 
-   c. **Path convention**: Use sibling directory with pattern `../<project-name>-<name>`
-      - Extract project name from current directory
+   c. **Path convention**: Use `worktree/` subfolder with pattern `worktree/<name>`
       - Use the normalized name (NOT the full branch with prefix)
-      - Example: `feature/auth-system` → `../myproject-auth-system`
+      - Example: `feature/auth-system` → `worktree/auth-system`
 
    d. **Create the worktree**: Execute the appropriate git worktree add command
 
@@ -76,60 +74,65 @@ CRITICAL: Perform the following steps exactly as described:
 
 ## Worktree Path Convention
 
-Worktrees are created as sibling directories to maintain organization:
+Worktrees are created inside a local `worktree/` subfolder to keep the workspace self-contained:
 
 ```
-~/projects/
-  myproject/                # Main worktree (current directory)
-  myproject-add-auth/       # Feature branch worktree (feature/add-auth)
-  myproject-critical-bug/   # Hotfix worktree (hotfix/critical-bug)
-  myproject-pr-456/         # PR review worktree (review/pr-456)
+myproject/                          # Main worktree (current directory)
+├── .git/
+├── .gitignore                      # Must include "worktree/"
+├── worktree/
+│   ├── add-auth/                   # feature/add-auth
+│   ├── critical-bug/               # hotfix/critical-bug
+│   └── pr-456/                     # review/pr-456
+├── src/
+└── ...
 ```
 
 **Naming rules:**
 
-- Pattern: `<project-name>-<name>` (uses the name part, NOT the full branch)
+- Pattern: `worktree/<name>` (uses the name part, NOT the full branch)
 - Branch name: `<type-prefix>/<name>` (e.g., `feature/add-auth`)
 - Directory name uses only the `<name>` portion for brevity
+- Add `worktree/` to `.gitignore` so worktree folders are never committed
 
 ## Examples
 
 **Feature worktree (default):**
 
 ```bash
-> $git-create-worktree auth system
+> /git:create-worktree auth system
 # Branch: feature/auth-system
-# Creates: ../myproject-auth-system
+# Creates: worktree/auth-system
 ```
 
 **Fix worktree:**
 
 ```bash
-> $git-create-worktree fix login error
+> /git:create-worktree fix login error
 # Branch: fix/login-error
-# Creates: ../myproject-login-error
+# Creates: worktree/login-error
 ```
 
 **Refactor worktree:**
 
 ```bash
-> $git-create-worktree refactor api layer
+> /git:create-worktree refactor api layer
 # Branch: refactor/api-layer
-# Creates: ../myproject-api-layer
+# Creates: worktree/api-layer
 ```
 
 **Hotfix worktree:**
 
 ```bash
-> $git-create-worktree hotfix critical bug
+> /git:create-worktree hotfix critical bug
 # Branch: hotfix/critical-bug
-# Creates: ../myproject-critical-bug
+# Creates: worktree/critical-bug
 ```
 
 **List existing worktrees:**
 
 ```bash
-> $git-create-worktree --list
+> /git:create-worktree --list
 # Shows: git worktree list output
 ```
 
@@ -164,7 +167,7 @@ Building project with cargo...
 ### Quick Feature Branch
 
 ```bash
-> $git-create-worktree new dashboard
+> /git:create-worktree new dashboard
 # Branch: feature/new-dashboard
 # Creates worktree, installs dependencies, ready to code
 ```
@@ -173,7 +176,7 @@ Building project with cargo...
 
 ```bash
 # In main worktree, working on feature
-> $git-create-worktree hotfix critical bug
+> /git:create-worktree hotfix critical bug
 # Branch: hotfix/critical-bug
 # Creates separate worktree from main/master
 # Fix bug in hotfix worktree
@@ -183,7 +186,7 @@ Building project with cargo...
 ### PR Review Without Stashing
 
 ```bash
-> $git-create-worktree review pr 123
+> /git:create-worktree review pr 123
 # Branch: review/pr-123
 # Creates worktree for reviewing PR
 # Can run tests, inspect code
@@ -193,7 +196,7 @@ Building project with cargo...
 ### Experiment or Spike
 
 ```bash
-> $git-create-worktree spike new architecture
+> /git:create-worktree spike new architecture
 # Branch: spike/new-architecture
 # Creates isolated worktree for experimentation
 # Discard or merge based on results
@@ -207,7 +210,7 @@ Building project with cargo...
 
 - **Clean working directory**: The command checks for uncommitted changes and warns if present, as creating worktrees is safest with a clean state.
 
-- **Sibling directories**: Worktrees are always created as sibling directories (using `../`) to keep the workspace organized. Never create worktrees inside the main repository.
+- **Local subfolder**: Worktrees are created under `worktree/` inside the repo to keep the workspace self-contained. Make sure `worktree/` is in `.gitignore`.
 
 - **Automatic dependency installation**: The command automatically detects the project type and package manager, then runs the appropriate install command without prompting.
 
@@ -218,13 +221,13 @@ Building project with cargo...
 When done with a worktree, use the proper removal command:
 
 ```bash
-git worktree remove ../myproject-add-auth
+git worktree remove worktree/add-auth
 ```
 
 Or for a worktree with uncommitted changes:
 
 ```bash
-git worktree remove --force ../myproject-add-auth
+git worktree remove --force worktree/add-auth
 ```
 
 Never use `rm -rf` to delete worktrees - always use `git worktree remove`.
@@ -243,7 +246,7 @@ Never use `rm -rf` to delete worktrees - always use `git worktree remove`.
 
 **"Dependency installation failed"**
 
-- Navigate to the worktree manually: `cd ../myproject-<name>`
+- Navigate to the worktree manually: `cd worktree/<name>`
 - Run the install command directly to see full error output
 - Common causes: missing system dependencies, network issues, corrupted lockfile
 
